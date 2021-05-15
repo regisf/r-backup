@@ -1,0 +1,23 @@
+root: /home/regis/
+destination: /media/regis/Bach-Up
+name: r-backup
+
+exclude:
+  patterns:
+    - node_modules
+    - __pycache__
+    - \\.o$
+    
+  paths:
+    - Public
+    - programmation/vcpkg
+
+include:
+  - programmation
+  - .ssh
+  - Documents
+  - Images
+  - Musique
+  - Vidéos
+  - Modèles
+
