@@ -46,10 +46,10 @@ CommandLine::CommandLine(int argc, char **argv)
         args.push_back(std::string(argv[i]));
     }
 
-    m_config = std::make_shared<Config_t>();
+    m_config = std::make_shared<Config>();
 }
 
-std::shared_ptr<Config_t> CommandLine::parse()
+std::shared_ptr<Config> CommandLine::parse()
 {
     if (!is_known_action(args.at(First)))
     {

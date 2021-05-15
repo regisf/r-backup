@@ -33,7 +33,7 @@
 #include <filesystem>
 #include <memory>
 
-struct Config_t;
+struct Config;
 
 
 namespace action
@@ -42,14 +42,14 @@ namespace action
     class Backup
     {
     public:
-        explicit Backup(std::shared_ptr<Config_t> config, std::unique_ptr<FileCopy> copy);
+        explicit Backup(std::shared_ptr<Config> config, std::unique_ptr<FileCopy> copy);
         void backup(const std::vector<std::filesystem::path> &pathes);
         const bool can_backup();
         const std::string error_message() const;
 
 
     private:
-        std::shared_ptr<Config_t> m_config;
+        std::shared_ptr<Config> m_config;
         std::string m_error_msg;
         std::unique_ptr<FileCopy> m_file_copy;
     };

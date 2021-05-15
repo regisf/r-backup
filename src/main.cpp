@@ -74,7 +74,7 @@ Options:
  * Process the backup action. 
  * The return code is 2
  */
-static int do_backup(std::shared_ptr<Config_t> config)
+static int do_backup(std::shared_ptr<Config> config)
 {
     int ret_val = 0;
 
@@ -108,7 +108,7 @@ static int do_backup(std::shared_ptr<Config_t> config)
     return ret_val;
 }
 
-static int process_action(std::shared_ptr<Config_t> config)
+static int process_action(std::shared_ptr<Config> config)
 {
     int ret_val = SuccessStatusCode;
 
@@ -148,7 +148,7 @@ int main(int argc, char **argv)
     try
     {
         CommandLine cmdLine(argc, argv);
-        std::shared_ptr<Config_t> config = cmdLine.parse();
+        std::shared_ptr<Config> config = cmdLine.parse();
         ret_val = process_action(config);
     }
     catch (CommandLineError &err)

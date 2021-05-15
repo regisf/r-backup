@@ -48,7 +48,16 @@ struct BackupOptions
     std::string backup_dir_name;
 };
 
-struct Config_t
+struct IConfig 
+{
+    virtual std::filesystem::path get_destination_directory() const = 0;
+    virtual const bool backup_exists() const = 0;
+    virtual std::filesystem::path get_() const = 0;
+    virtual std::filesystem::path get_destination_directory(const std::filesystem::path &path) const = 0;
+    virtual const bool is_destination_dir_exists(const std::filesystem::path& source) const = 0;
+};
+
+struct Config : public IConfig
 {
     CommandLineType action;
     BackupOptions backup;

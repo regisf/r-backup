@@ -32,7 +32,7 @@
 #include <regex>
 #include <iostream>
 
-PathExplorer::PathExplorer(std::shared_ptr<Config_t> config)
+PathExplorer::PathExplorer(std::shared_ptr<Config> config)
     : m_config(config) {}
 
 std::vector<std::filesystem::path> PathExplorer::explore()

@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <memory>
 
+
 class FileCopy
 {
 public:
@@ -14,13 +15,14 @@ public:
     };
 
 
-    FileCopy(std::shared_ptr<Config_t> config) : m_config(config) {}
+    FileCopy(std::shared_ptr<Config> config) : m_config(config) {}
     
     void copy_file(const std::filesystem::path &source, const std::filesystem::path &dest);
     Status create_parent_directories(const std::filesystem::path& source);
     void effectiveCopy(const std::filesystem::path &source, const std::filesystem::path &dest);
+
 private:
-    std::shared_ptr<Config_t> m_config;
+    std::shared_ptr<Config> m_config;
 };
 
 #endif

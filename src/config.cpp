@@ -30,22 +30,22 @@
 #include <filesystem>
 #include <iostream>
 
-std::filesystem::path Config_t::get_() const
+std::filesystem::path Config::get_() const
 {
     return configFile.get_destination() / backup.backup_dir_name;
 }
 
-std::filesystem::path Config_t::get_destination_directory() const
+std::filesystem::path Config::get_destination_directory() const
 {
     return get_() / date::get_now();
 }
 
-const bool Config_t::backup_exists() const
+const bool Config::backup_exists() const
 {
     return std::filesystem::exists(get_destination_directory());
 }
 
-std::filesystem::path Config_t::remove_root_path(const std::filesystem::path &path) const
+std::filesystem::path Config::remove_root_path(const std::filesystem::path &path) const
 {
     const auto root = configFile.get_root_path();
     const auto path_str = path.string();
@@ -61,7 +61,7 @@ std::filesystem::path Config_t::remove_root_path(const std::filesystem::path &pa
     return std::filesystem::path{p};
 }
 
-std::filesystem::path Config_t::get_destination_directory(const std::filesystem::path &path) const
+std::filesystem::path Config::get_destination_directory(const std::filesystem::path &path) const
 {
     const auto parent_path = path.parent_path();
     const auto parent = remove_root_path(parent_path);
@@ -69,7 +69,7 @@ std::filesystem::path Config_t::get_destination_directory(const std::filesystem:
     return get_destination_directory() / parent / path.filename();
 }
 
-const bool Config_t::is_destination_dir_exists(const std::filesystem::path &source) const
+const bool Config::is_destination_dir_exists(const std::filesystem::path &source) const
 {
     const auto dest_parent = get_destination_directory(source).parent_path();
     

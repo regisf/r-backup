@@ -36,7 +36,7 @@
 class PathExplorer
 {
 public:
-    explicit PathExplorer(std::shared_ptr<Config_t> config);
+    explicit PathExplorer(std::shared_ptr<Config> config);
     std::vector<std::filesystem::path> explore();
 
 private:
@@ -46,7 +46,7 @@ private:
 
 private:
     std::vector<std::filesystem::path> m_pathes;
-    std::shared_ptr<Config_t>  m_config;
+    std::shared_ptr<Config>  m_config;
 };
 
 #endif

@@ -53,7 +53,7 @@ class CommandLine
 public:
     CommandLine(int argc, char **argv);
 
-    std::shared_ptr<Config_t> parse();
+    std::shared_ptr<Config> parse();
 
 private:
     const bool is_known_action(const std::string &action) const;
@@ -65,7 +65,7 @@ private:
     CommandLineType action_type_from_string(const std::string& action) const;
 
 private:
-    std::shared_ptr<Config_t> m_config;
+    std::shared_ptr<Config> m_config;
     std::vector<std::string> args;
 };
 

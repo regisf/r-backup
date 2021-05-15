@@ -39,7 +39,7 @@
 
 namespace action
 {
-    Backup::Backup(std::shared_ptr<Config_t> config, std::unique_ptr<FileCopy> copy)
+    Backup::Backup(std::shared_ptr<Config> config, std::unique_ptr<FileCopy> copy)
         : m_config(config)
     {
         m_file_copy = std::move(copy);
