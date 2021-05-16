@@ -16,10 +16,10 @@ void FileCopy::copy_file(const std::filesystem::path &source, const std::filesys
         }
     }
 
-    effectiveCopy(source, dest_file_path);
+    effective_copy(source, dest_file_path);
 }
 
-FileCopy::Status FileCopy::create_parent_directories(const std::filesystem::path &dest_parent)
+Status FileCopy::create_parent_directories(const std::filesystem::path &dest_parent)
 {
     try
     {
@@ -34,7 +34,7 @@ FileCopy::Status FileCopy::create_parent_directories(const std::filesystem::path
     return Status::Success;
 }
 
-void FileCopy::effectiveCopy(const std::filesystem::path &source, const std::filesystem::path &dest)
+void FileCopy::effective_copy(const std::filesystem::path &source, const std::filesystem::path &dest) 
 {
     try
     {
