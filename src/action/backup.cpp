@@ -59,6 +59,11 @@ namespace action
         const auto destination = m_config->configFile.get_destination();
         for (const auto &path : pathes)
         {
+            if (m_config->verbose) 
+            {
+                std::cout << "Copying " << path.string() << " to " << destination.string() << "\n";
+            }
+
             m_file_copy->copy_file(path, destination);
         }
     }

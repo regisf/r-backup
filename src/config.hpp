@@ -60,6 +60,8 @@ struct IConfig
 
 struct Config : public IConfig
 {
+    bool verbose{false};
+
     CommandLineType action;
     BackupOptions backup;
     ConfigFile configFile;

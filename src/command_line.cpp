@@ -164,6 +164,12 @@ Options are:
             continue;
         }
 
+        if (!argument.compare("--verbose"))
+        {
+            m_config->verbose = true;
+            continue;
+        }
+
         std::stringstream ss;
         ss << "Error: Unknown option \"" << args.at(i) << "\"";
         throw CommandLineError(ss.str());
