@@ -1,8 +1,8 @@
-#include "../../src/action/path_explorer.hpp"
+// #include "../../src/action/path_explorer.hpp"
 
-#include <gtest/gtest.h>
+// #include <gtest/gtest.h>
 
-TEST(test_path_explorer, test_should_be_skipped)
-{
-    FAIL();
-}
+// TEST(test_path_explorer, test_should_be_skipped)
+// {
+//     FAIL();
+// }
