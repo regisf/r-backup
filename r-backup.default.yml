@@ -1,6 +1,13 @@
 root: /home/regis/
 destination: /media/regis/Bach-Up
 name: r-backup
+periodicity: 1 day
+# 
+# keep all (default)
+# keep nth (where nth is the number of backup to keep)
+# remove previous
+# difference
+strategy: keep all
 
 exclude:
   patterns:
