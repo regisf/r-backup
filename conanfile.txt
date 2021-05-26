@@ -1,6 +1,5 @@
 [requires]
 yaml-cpp/0.6.3
-fakeit/2.0.8
 gtest/1.10.0
 
 [generators]
