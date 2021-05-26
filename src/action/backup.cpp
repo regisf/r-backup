@@ -70,6 +70,11 @@ namespace action
 
     const bool Backup::can_backup()
     {
+        if (m_config->dry_run)
+        {
+            return true;
+        }
+        
         bool status = true;
 
         if (!std::filesystem::exists(m_config->configFile.get_destination()))

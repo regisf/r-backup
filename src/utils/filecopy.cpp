@@ -7,7 +7,7 @@ void FileCopy::copy_file(const std::filesystem::path &source, const std::filesys
     const auto dest_file_path = m_config->get_destination_directory(source);
     const auto dest_parent = dest_file_path.parent_path();
 
-    if (!m_config->is_destination_dir_exists(source))
+    if (!m_config->is_destination_dir_exists(source) && !std::filesystem::is_regular_file(source))
     {
         auto status = create_parent_directories(dest_parent);
         if (status != Status::Success)
@@ -36,6 +36,11 @@ Status FileCopy::create_parent_directories(const std::filesystem::path &dest_par
 
 void FileCopy::effective_copy(const std::filesystem::path &source, const std::filesystem::path &dest) 
 {
+    if (m_config->dry_run)
+    {
+        return;
+    }
+
     try
     {
         std::filesystem::copy_file(source, dest);
@@ -46,4 +51,9 @@ void FileCopy::effective_copy(const std::filesystem::path &source, const std::fi
                   << " to " << dest
                   << " because: " << err.what() << std::endl;
     }
+}
+
+void FileCopy::set_config(std::shared_ptr<Config> config)
+{
+    m_config = config;
 }

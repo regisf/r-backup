@@ -101,7 +101,7 @@ void PathExplorer::explore_directory(const std::filesystem::path &dir_path)
         return;
     }
 
-    for (auto &p : std::filesystem::directory_iterator(dir_path))
+     for (auto &p : std::filesystem::directory_iterator(dir_path))
     {
 
         if (should_be_skipped(p))

@@ -128,6 +128,13 @@ Options are:
             std::exit(0);
         }
 
+        if (!argument.compare("--dry-run"))
+        {
+            m_config->dry_run = true;
+            m_config->verbose = true;
+            continue;
+        }
+
         if (!argument.compare("--config-file"))
         {
 
@@ -157,7 +164,7 @@ Options are:
         {
             if (i + 1 == l)
             {
-               throw CommandLineError("Error: --name option needs an argument");
+                throw CommandLineError("Error: --name option needs an argument");
             }
 
             m_config->backup.backup_dir_name = args.at(++i);

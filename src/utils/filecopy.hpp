@@ -20,17 +20,22 @@ public:
     virtual void effective_copy(const std::filesystem::path &source, const std::filesystem::path &dest) = 0;
 };
 
-class FileCopy 
+/**
+ * @brief FileCopy implementation
+ */
+class FileCopy : public IFileCopy
 {
 public:
-    FileCopy(std::shared_ptr<IConfig> config) : m_config(config) {}
-
-    void copy_file(const std::filesystem::path &source, const std::filesystem::path &dest);
+    FileCopy() = default;
+    FileCopy(std::shared_ptr<Config> config) : m_config(config) {}
+    
+    virtual void copy_file(const std::filesystem::path &source, const std::filesystem::path &dest);
     virtual Status create_parent_directories(const std::filesystem::path &source);
     virtual void effective_copy(const std::filesystem::path &source, const std::filesystem::path &dest);
+    virtual void set_config(std::shared_ptr<Config> config);
 
 private:
-    std::shared_ptr<IConfig> m_config;
+    std::shared_ptr<Config> m_config;
 };
 
 #endif
