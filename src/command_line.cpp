@@ -26,6 +26,7 @@
 
 #include "command_line.hpp"
 #include "config_file.hpp"
+#include "values/strategy.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -34,8 +35,10 @@
 
 static const size_t First = 0;
 
+
 CommandLine::CommandLine(int argc, char **argv)
 {
+
     if (argc == 1)
     {
         throw CommandLineError("Missing arguments");
@@ -45,6 +48,8 @@ CommandLine::CommandLine(int argc, char **argv)
     {
         args.push_back(std::string(argv[i]));
     }
+
+    
 
     m_config = std::make_shared<Config>();
 }
@@ -123,9 +128,49 @@ Options are:
     --config-file: set the config file that contains 
     --destination: Set the destionation
     --name: Set the destination name.
+    --strategy: The default backup strategy.
+        Strategies are 
+            keep-all: Keep all backups. You remove old ones manually
+            keep-nth: Keep only nth last backup. Implies --nth argument
+            remove-previous:  Keep only one backup.
+            difference: Backup only the last 
+    --nth: The number of backup to keep (implies --strategy keep_nth)
 
 )";
             std::exit(0);
+        }
+
+        if (!argument.compare("--strategy")) 
+        {
+            if (i + 1 == l)
+            {
+                throw CommandLineError("Error: --strategy option needs an argument");
+            }
+            
+            m_config->strategy.value = StrategyValue(args.at(++i));
+            continue;
+        }
+
+        if (!argument.compare("--nth")) 
+        {
+            if (i + 1 == l)
+            {
+                throw CommandLineError("Error: --nth option needs an argument");
+            }
+            
+            try 
+            {
+                m_config->strategy.nth = NthValue(args.at(++i));
+            }
+            catch (NthValueException &e)
+            {
+                std::stringstream ss;
+                ss << "Error: " << e.message();
+
+                throw CommandLineError(ss.str());
+            }
+
+            continue;
         }
 
         if (!argument.compare("--dry-run"))
@@ -180,6 +225,16 @@ Options are:
         std::stringstream ss;
         ss << "Error: Unknown option \"" << args.at(i) << "\"";
         throw CommandLineError(ss.str());
+    }
+
+    if (m_config->strategy.value == StrategyValue::Strategy::KeepNth && !m_config->strategy.nth.is_set())
+    {
+        throw CommandLineError("Error: Strategy option with value set to keep-nth implies --nth option");
+    }
+
+    if (m_config->strategy.nth.is_set() && !m_config->strategy.value.is_set()) 
+    {
+        throw CommandLineError("Error: --nth option is set but --strategy is not set to  keep-nth");
     }
 }
 

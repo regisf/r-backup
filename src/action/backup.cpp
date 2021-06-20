@@ -61,14 +61,14 @@ namespace action
         {
             if (m_config->verbose) 
             {
-                std::cout << "Copying " << path.string() << " to " << destination.string() << "\n";
+                std::cout << "Copying " << path.string() << " to " <<  (destination / path.filename()).string() << "\n";
             }
 
             m_file_copy->copy_file(path, destination);
         }
     }
 
-    const bool Backup::can_backup()
+    bool Backup::can_backup()
     {
         if (m_config->dry_run)
         {
@@ -90,5 +90,5 @@ namespace action
         return status;
     }
 
-    const std::string Backup::error_message() const { return m_error_msg; }
+    std::string Backup::error_message() const { return m_error_msg; }
 }

@@ -40,7 +40,7 @@ std::filesystem::path Config::get_destination_directory() const
     return get_() / date::get_now();
 }
 
-const bool Config::backup_exists() const
+bool Config::backup_exists() const
 {
     return std::filesystem::exists(get_destination_directory());
 }
@@ -69,9 +69,9 @@ std::filesystem::path Config::get_destination_directory(const std::filesystem::p
     return get_destination_directory() / parent / path.filename();
 }
 
-const bool Config::is_destination_dir_exists(const std::filesystem::path &source) const
+bool Config::is_destination_dir_exists(const std::filesystem::path &source) const
 {
     const auto dest_parent = get_destination_directory(source).parent_path();
-    
+
     return std::filesystem::exists(dest_parent) && std::filesystem::is_directory(dest_parent);
 }

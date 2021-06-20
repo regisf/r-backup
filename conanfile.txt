@@ -1,5 +1,6 @@
 [requires]
 yaml-cpp/0.6.3
+lyra/1.5.1
 gtest/1.10.0
 
 [generators]

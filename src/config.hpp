@@ -28,6 +28,8 @@
 #define CONFIG_HPP
 
 #include "config_file.hpp"
+#include "values/strategy.hpp"
+#include "values/nth.hpp"
 
 #include <string>
 
@@ -57,11 +59,19 @@ struct Config
     BackupOptions backup;
     ConfigFile configFile;
 
+    struct strategy {
+        StrategyValue value;
+        NthValue nth;
+    } strategy;
+
+    DestinationValue destination;
+    ConfigurationValue configuration;
+
     std::filesystem::path get_destination_directory() const;
-    const bool backup_exists() const;
+    bool backup_exists() const;
     std::filesystem::path get_() const;
     std::filesystem::path get_destination_directory(const std::filesystem::path &path) const;
-    const bool is_destination_dir_exists(const std::filesystem::path& source) const;
+    bool is_destination_dir_exists(const std::filesystem::path& source) const;
 
 private:
     std::filesystem::path remove_root_path(const std::filesystem::path &path) const;
