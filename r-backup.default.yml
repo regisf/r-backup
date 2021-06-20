@@ -1,24 +1,32 @@
+# the root path you want to backup. As example, this is the program creator home directory
 root: /home/regis/
+# Where you want to backup. Here the program creator USB external drive
 destination: /media/regis/Bach-Up
+# The distination directory
 name: r-backup
+# How often do you want to backup the directory `root`. Not Implemented yet
 periodicity: 1 day
-# 
-# keep all (default)
-# keep nth (where nth is the number of backup to keep)
-# remove previous
-# difference
+# What is the backup strategy
+# * keep all (default) (implemented)
+# * keep nth (where nth is the number of backup to keep) (not implemented)
+# * remove previous (not implemented)
+# * difference (not implement)
 strategy: keep all
 
+# Directories or files you way want to exclude
 exclude:
+  # Exclude those regex pattern (caution, must be the c++ regex dialect)
   patterns:
     - node_modules
     - __pycache__
     - \\.o$
     
+  # The path (base on root) you may want to exclude
   paths:
     - Public
     - programmation/vcpkg
 
+# The directory you may want to backup
 include:
   - programmation
   - .ssh
