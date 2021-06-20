@@ -9,16 +9,21 @@ However, it works an it is partially functional.
 Install and configure [conan](https://conan.io/)
 
 Create a build directory
-
+```shell
   $ mkdir build && cd build
+``` 
 
 Then launch conan package manager. The argument `--build=missing` will build libraries if the binary is missing
 
+```shell
   $ conan install .. --build=missing
+``` 
 
 Build the project
 
+```shell
   $ cmake --build . -j 
+``` 
 
 ## Launch
 
@@ -26,14 +31,18 @@ Create a configuration file into `mkdir ${HOME}/.config/r-backup/ && touch ${HOM
 
 Then 
 
+```shell
   $ ./r-backup backup
+``` 
   
 To backup.
 
 ## Help
 
 Use:
+```shell
   $ ./r-backup --help
+``` 
 
 ## Notes (in french) for myself.
 
