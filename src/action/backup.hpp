@@ -42,16 +42,16 @@ namespace action
     class Backup
     {
     public:
-        explicit Backup(std::shared_ptr<Config> config, std::unique_ptr<FileCopy> copy);
+        explicit Backup(std::shared_ptr<Config> config, FileCopy copy);
         void backup(const std::vector<std::filesystem::path> &pathes);
         bool can_backup();
-        std::string error_message() const;
+        [[nodiscard]] std::string error_message() const;
 
 
     private:
         std::shared_ptr<Config> m_config;
         std::string m_error_msg;
-        std::unique_ptr<FileCopy> m_file_copy;
+        FileCopy m_file_copy;
     };
 }
 

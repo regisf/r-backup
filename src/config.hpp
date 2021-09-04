@@ -29,12 +29,12 @@
 
 #include "config_file.hpp"
 #include "values/strategy.hpp"
-#include "values/nth.hpp"
+#include "values/destination.hpp"
+#include "values/configuration.hpp"
 
 #include <string>
 
-enum class CommandLineType
-{
+enum class CommandLineType {
     Unknown,
     Help,
     Init,
@@ -44,34 +44,32 @@ enum class CommandLineType
     Stop
 };
 
-struct BackupOptions
-{
+struct BackupOptions {
     std::string config_file;
     std::string backup_dir_name;
 };
 
-struct Config
-{
+
+struct Config {
     bool verbose{false};
     bool dry_run{false};
 
+    StrategyValue strategy;
     CommandLineType action;
     BackupOptions backup;
     ConfigFile configFile;
-
-    struct strategy {
-        StrategyValue value;
-        NthValue nth;
-    } strategy;
-
-    DestinationValue destination;
-    ConfigurationValue configuration;
+//    DestinationValue destination;
+//    ConfigurationValue configuration;
 
     std::filesystem::path get_destination_directory() const;
+
     bool backup_exists() const;
+
     std::filesystem::path get_() const;
+
     std::filesystem::path get_destination_directory(const std::filesystem::path &path) const;
-    bool is_destination_dir_exists(const std::filesystem::path& source) const;
+
+    bool is_destination_dir_exists(const std::filesystem::path &source) const;
 
 private:
     std::filesystem::path remove_root_path(const std::filesystem::path &path) const;

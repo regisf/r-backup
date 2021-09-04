@@ -56,7 +56,7 @@ public:
     std::shared_ptr<Config> parse();
 
 private:
-    const bool is_known_action(const std::string &action) const;
+    bool is_known_action(const std::string &action) const;
     std::filesystem::path resolve_path(const std::string &path) const;
     void backup_configuration();
     void init_configuration();

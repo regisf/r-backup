@@ -2,9 +2,10 @@
 
 #include <iostream>
 
-StrategyValue::StrategyValue(const std::string& strat_value)
+StrategyValue::StrategyValue(const std::string& strat_value, int nth)
 {
     m_strategy = from_string(strat_value);
+    m_nth = nth;
 }
 
 StrategyValue::StrategyValue(const StrategyValue& src)

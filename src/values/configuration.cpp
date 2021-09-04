@@ -1,4 +1,4 @@
-#include "configurationvalue.hpp"
+#include "configuration.hpp"
 
 ConfigurationValue::ConfigurationValue(const std::string& value) : m_value(value)
 {}

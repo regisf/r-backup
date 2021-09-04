@@ -46,7 +46,7 @@ CommandLine::CommandLine(int argc, char **argv)
 
     for (int i = 1; i < argc; ++i)
     {
-        args.push_back(std::string(argv[i]));
+        args.emplace_back(std::string(argv[i]));
     }
 
     
@@ -94,7 +94,7 @@ std::shared_ptr<Config> CommandLine::parse()
     return m_config;
 }
 
-const bool CommandLine::is_known_action(const std::string &action) const
+ bool CommandLine::is_known_action(const std::string &action) const
 {
     return (action == "help" || action == "--help" || action == "-h" || action == "init" || action == "backup" || action == "restore");
 }
@@ -147,7 +147,7 @@ Options are:
                 throw CommandLineError("Error: --strategy option needs an argument");
             }
             
-            m_config->strategy.value = StrategyValue(args.at(++i));
+//            m_config->strategy.value = StrategyValue(args.at(++i));
             continue;
         }
 
@@ -158,17 +158,17 @@ Options are:
                 throw CommandLineError("Error: --nth option needs an argument");
             }
             
-            try 
-            {
-                m_config->strategy.nth = NthValue(args.at(++i));
-            }
-            catch (NthValueException &e)
-            {
-                std::stringstream ss;
-                ss << "Error: " << e.message();
+//            try
+//            {
+//                m_config->strategy.nth = NthValue(args.at(++i));
+//            }
+//            catch (NthValueException &e)
+//            {
+//                std::stringstream ss;
+//                ss << "Error: " << e.message();
 
-                throw CommandLineError(ss.str());
-            }
+//                throw CommandLineError(ss.str());
+//            }
 
             continue;
         }
@@ -227,15 +227,6 @@ Options are:
         throw CommandLineError(ss.str());
     }
 
-    if (m_config->strategy.value == StrategyValue::Strategy::KeepNth && !m_config->strategy.nth.is_set())
-    {
-        throw CommandLineError("Error: Strategy option with value set to keep-nth implies --nth option");
-    }
-
-    if (m_config->strategy.nth.is_set() && !m_config->strategy.value.is_set()) 
-    {
-        throw CommandLineError("Error: --nth option is set but --strategy is not set to  keep-nth");
-    }
 }
 
 void CommandLine::init_configuration()

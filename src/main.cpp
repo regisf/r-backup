@@ -43,11 +43,12 @@
 #include <memory>
 
 #include <lyra/lyra.hpp>
+#include <spdlog/spdlog.h>
 
-enum {
+enum class StatusCode {
     SuccessStatusCode = EXIT_SUCCESS,
-    DefaultStatusCode = EXIT_FAILURE,
-    BackupActionStatus
+    DefaultStatusCode = EXIT_SUCCESS,
+    BackupActionStatus = 2
 };
 
 static void display_usage()
@@ -75,22 +76,20 @@ Options:
  * Process the backup action.
  * The return code is 2
  */
-static int do_backup(std::shared_ptr<Config> config)
+static StatusCode do_backup(const std::shared_ptr<Config>& config)
 {
-    int ret_val = 0;
+    StatusCode ret_val{StatusCode::DefaultStatusCode};
 
-    std::unique_ptr<FileCopy> filecopy = std::make_unique<FileCopy>(config);
-    action::Backup bk_act(config, std::move(filecopy));
+    FileCopy filecopy{config};
 
-    if (bk_act.can_backup()) {
+    if (action::Backup bk_act(config, filecopy); bk_act.can_backup()) {
         std::vector<std::filesystem::path> pathes;
 
         if (!config->backup_exists()) {
-            std::cout << "Exploring directory " << config->configFile.get_root_path()
-                      << "\n";
+            spdlog::info("Exploring directory {}",config->configFile.get_root_path());
             PathExplorer explorer(config);
             pathes = explorer.explore();
-            std::cout << "Got " << pathes.size() << " files found\n";
+            spdlog::info("Got {} files found", pathes.size());
         } else {
             std::cout
                     << "There's nothing to backup because it is already backuped.\n";
@@ -100,15 +99,15 @@ static int do_backup(std::shared_ptr<Config> config)
     } else {
         std::cerr << "Error: Unable to backup because: " << bk_act.error_message()
                   << std::endl;
-        ret_val = BackupActionStatus;
+        ret_val = StatusCode::BackupActionStatus;
     }
 
     return ret_val;
 }
 
-static int process_action(std::shared_ptr<Config> config)
+static StatusCode process_action(const std::shared_ptr<Config>& config)
 {
-    int ret_val = SuccessStatusCode;
+    auto ret_val = StatusCode::SuccessStatusCode;
 
     switch (config->action) {
     case CommandLineType::Help:
@@ -143,10 +142,12 @@ static int process_action(std::shared_ptr<Config> config)
 static std::shared_ptr<Config> parse_commandline(int argc, char** argv)
 {
     bool show_help { false };
-    std::string strategy, config_file, destination;
-    int nth;
+    std::string strategy;
+    std::string config_file;
+    std::string destination;
+    int nth{0};
 
-    std::shared_ptr<Config> config = std::make_shared<Config>();
+    auto config = std::make_shared<Config>();
     
     auto cli = lyra::cli() | lyra::help(show_help);
 
@@ -155,15 +156,13 @@ static std::shared_ptr<Config> parse_commandline(int argc, char** argv)
             .add_argument(lyra::opt(config->verbose)["--verbose"]("Set verbosity to on").optional())
             .add_argument(lyra::opt(config->dry_run)["--dry-run"]("Do nothing, just simulate").optional())
             .add_argument(lyra::opt(strategy, "strategy")["--strategy"]("Set the backup strategy").optional())
-            .add_argument(lyra::opt(destination, "destination")["--destination"]("Set the destination directory").optional())
             .add_argument(lyra::opt(nth, "nth")["--nth"]("How many").optional())
+            .add_argument(lyra::opt(destination, "destination")["--destination"]("Set the destination directory").optional())
             .add_argument(lyra::opt(config_file, "configuration_file")["--config-file"]("set the config file that contains ").optional());
 
     cli.add_argument(backup_group);
 
-    auto result = cli.parse({ argc, argv });
-
-    if (!result) {
+    if (auto result = cli.parse({ argc, argv }); !result) {
         std::cerr << "Error in command line: " << result.errorMessage()
                   << std::endl;
         std::exit(1);
@@ -174,17 +173,13 @@ static std::shared_ptr<Config> parse_commandline(int argc, char** argv)
         std::exit(EXIT_SUCCESS);
     }
 
-    if (!strategy.empty()) {
-        config->strategy.value = StrategyValue(strategy);
-    }
+//    if (strategy.size()) {
+//        if (!nth) {
+//            std::cerr << "Error missing "
+//        }
+//        config->strategy = StrategyValue(strategy, nth);
+//    }
 
-    if (!config_file.empty()) {
-        config->configuration = ConfigurationValue(configuration);
-    }
-
-    if (!destination.empty()) {
-        config->destination = DestinationValue(destination);
-    }
 
     return config;
 }
@@ -195,19 +190,19 @@ int main(int argc, char** argv)
 
     std::cout << "Verbose = " << config->verbose << "\n"
                << "Dry run = " << config->dry_run << "\n";
-    int ret_val = DefaultStatusCode;
+    StatusCode ret_val = StatusCode::DefaultStatusCode;
 
     try
     {
-        //        CommandLine cmdLine(argc, argv);
-        //        auto config = cmdLine.parse();
-        //        ret_val = process_action(config);
+        CommandLine cmdLine(argc, argv);
+        auto config = cmdLine.parse();
+        ret_val = process_action(config);
     }
-    catch (CommandLineError &err)
+    catch (const CommandLineError &err)
     {
         std::cerr << err.message << std::endl;
         display_usage();
     }
 
-    return ret_val;
+    return int(ret_val);
 }

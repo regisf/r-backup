@@ -33,54 +33,43 @@
 
 #include <iostream>
 #include <filesystem>
+#include <utility>
 
 #include <yaml-cpp/yaml.h>
 
 
-namespace action
-{
-    Backup::Backup(std::shared_ptr<Config> config, std::unique_ptr<FileCopy> copy)
-        : m_config(config)
-    {
-        m_file_copy = std::move(copy);
+namespace action {
+    Backup::Backup(std::shared_ptr<Config> config, FileCopy copy)
+            : m_config(std::move(config)), m_file_copy(std::move(copy)) {
     }
 
-    void Backup::backup(const std::vector<std::filesystem::path> &pathes)
-    {
-        if (pathes.size())
-        {
+    void Backup::backup(const std::vector<std::filesystem::path> &pathes) {
+        if (!pathes.empty()) {
             std::cout << "Got " << pathes.size() << " files to backup\n";
-        }
-        else 
-        {
+        } else {
             std::cout << "Nothing to backup\n";
         }
-        
+
         const auto destination = m_config->configFile.get_destination();
-        for (const auto &path : pathes)
-        {
-            if (m_config->verbose) 
-            {
-                std::cout << "Copying " << path.string() << " to " <<  (destination / path.filename()).string() << "\n";
+        for (const auto &path : pathes) {
+            if (m_config->verbose) {
+                std::cout << "Copying " << path.string() << " to " << (destination / path.filename()).string() << "\n";
             }
 
-            m_file_copy->copy_file(path, destination);
+            m_file_copy.copy_file(path, destination);
         }
     }
 
-    bool Backup::can_backup()
-    {
-        if (m_config->dry_run)
-        {
+    bool Backup::can_backup() {
+        if (m_config->dry_run) {
             return true;
         }
-        
+
         bool status = true;
 
-        if (!std::filesystem::exists(m_config->configFile.get_destination()))
-        {
+        if (!std::filesystem::exists(m_config->configFile.get_destination())) {
             std::stringstream ss;
-            ss << "Unable to find the destination directory:" 
+            ss << "Unable to find the destination directory:"
                << m_config->configFile.get_destination();
 
             status = false;
