@@ -50,7 +50,15 @@ struct BackupOptions {
 };
 
 
-struct Config {
+struct IConfig {
+    virtual std::filesystem::path get_destination_directory() const = 0;
+    virtual bool backup_exists() const = 0;
+    virtual std::filesystem::path get_() const = 0;
+    virtual std::filesystem::path get_destination_directory(const std::filesystem::path &path) const = 0;
+    virtual bool is_destination_dir_exists(const std::filesystem::path &source) const = 0;
+};
+
+struct Config : IConfig {
     bool verbose{false};
     bool dry_run{false};
 
@@ -61,15 +69,15 @@ struct Config {
 //    DestinationValue destination;
 //    ConfigurationValue configuration;
 
-    std::filesystem::path get_destination_directory() const;
+    std::filesystem::path get_destination_directory() const override;
 
-    bool backup_exists() const;
+    bool backup_exists() const override;
 
-    std::filesystem::path get_() const;
+    std::filesystem::path get_() const override;
 
-    std::filesystem::path get_destination_directory(const std::filesystem::path &path) const;
+    std::filesystem::path get_destination_directory(const std::filesystem::path &path) const override;
 
-    bool is_destination_dir_exists(const std::filesystem::path &source) const;
+    bool is_destination_dir_exists(const std::filesystem::path &source) const override;
 
 private:
     std::filesystem::path remove_root_path(const std::filesystem::path &path) const;
