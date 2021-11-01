@@ -38,7 +38,6 @@ struct Config;
 
 namespace action
 {
-
     class Backup
     {
     public:
