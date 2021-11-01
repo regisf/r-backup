@@ -13,7 +13,6 @@ TEST(test_filecopy, copy_file_destination_directory_exists)
     std::filesystem::path dest{"/another/destination"};
 
     fakeit::Mock<IConfig> mockConfig;
-
     IConfig & config = mockConfig.get();
 
 }
