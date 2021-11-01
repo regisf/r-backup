@@ -45,6 +45,8 @@
 #include <lyra/lyra.hpp>
 #include <spdlog/spdlog.h>
 
+#define RBackupVersion "0.1.0"
+
 enum class StatusCode {
     SuccessStatusCode = EXIT_SUCCESS,
     DefaultStatusCode = EXIT_SUCCESS,
@@ -153,8 +155,8 @@ static std::shared_ptr<Config> parse_commandline(int argc, char** argv)
     
     auto cli = lyra::cli() | lyra::help(show_help);
 
-    auto version_group = lyra::command("version", [](const lyra::group &g) {
-        std::cout << "R-Backup : A backup tool. \n    Version " << CurrentVersion << "\n";
+    auto version_group = lyra::command("version", [](const lyra::group& g) { 
+        std::cout << "R-Backup - Version " << RBackupVersion << std::endl;
         std::exit(EXIT_SUCCESS);
     }).help("Display the current version");
 
@@ -167,6 +169,7 @@ static std::shared_ptr<Config> parse_commandline(int argc, char** argv)
             .add_argument(lyra::opt(destination, "destination")["--destination"]("Set the destination directory").optional())
             .add_argument(lyra::opt(config_file, "configuration_file")["--config-file"]("set the config file that contains ").optional());
 
+    cli.add_argument(version_group);
     cli.add_argument(backup_group);
     cli.add_argument(version_group);
 
@@ -187,6 +190,12 @@ static std::shared_ptr<Config> parse_commandline(int argc, char** argv)
 int main(int argc, char** argv)
 {
     auto config = parse_commandline(argc, argv);
+<<<<<<< HEAD
+=======
+
+    // std::cout << "Verbose = " << config->verbose << "\n"
+    //            << "Dry run = " << config->dry_run << "\n";
+>>>>>>> 7b64b23 (Add versioning)
     StatusCode ret_val = StatusCode::DefaultStatusCode;
 
     try
