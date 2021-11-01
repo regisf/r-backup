@@ -6,4 +6,6 @@ list(REMOVE_ITEM ${SOURCES} main.cpp)
 add_library(${BINARY}_lib STATIC ${SOURCES})
 
 add_executable(${BINARY} main.cpp)
+# target_link_libraries(${BINARY}  ${BINARY}_lib  PRIVATE bfg::lyra spdlog::spdlog spdlog::spdlog_header_only yaml-cpp)
+
 target_link_libraries(${BINARY}  ${BINARY}_lib  ${CONAN_LIBS})
