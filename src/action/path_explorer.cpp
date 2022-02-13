@@ -32,8 +32,6 @@
 #include <regex>
 #include <iostream>
 
-#include <boost/algorithm/string/predicate.hpp>
-
 
 PathExplorer::PathExplorer(std::shared_ptr<Config> config)
     : m_config(config) {}
@@ -78,7 +76,7 @@ const bool PathExplorer::should_be_skipped(const std::filesystem::path &p) const
         auto &pathes = m_config->configFile.get_excluded_paths();
         for (const auto &path : pathes)
         {
-            if (boost::algorithm::starts_with(p.string(), path))
+            if (p.string().starts_with(path))
             {
                 is_excluded = true;
                 break;

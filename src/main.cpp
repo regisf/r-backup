@@ -190,12 +190,9 @@ static std::shared_ptr<Config> parse_commandline(int argc, char** argv)
 int main(int argc, char** argv)
 {
     auto config = parse_commandline(argc, argv);
-<<<<<<< HEAD
-=======
 
     // std::cout << "Verbose = " << config->verbose << "\n"
     //            << "Dry run = " << config->dry_run << "\n";
->>>>>>> 7b64b23 (Add versioning)
     StatusCode ret_val = StatusCode::DefaultStatusCode;
 
     try

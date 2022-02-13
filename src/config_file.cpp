@@ -28,7 +28,6 @@
 
 #include <iostream>
 #include <cstdlib>
-#include <boost/algorithm/string/predicate.hpp>
 
 #include <yaml-cpp/yaml.h>
 
@@ -95,7 +94,7 @@ void ConfigFile::extract_root_path()
     }
 
     // Ensure path
-    if (!boost::algorithm::ends_with(m_root, SystemSeparator))
+    if (!m_root.ends_with(SystemSeparator))
     {
         m_root += SystemSeparator;
     }
@@ -188,7 +187,7 @@ std::vector<std::string> ConfigFile::get_paths_to_explore()
 
     if (m_include_directories.size())
     {
-        const auto sep = boost::algorithm::ends_with(get_root_path(), "/") ? "" : "/";
+        const auto sep = get_root_path().ends_with("/") ? "" : "/";
 
         std::for_each(m_include_directories.begin(), m_include_directories.end(), [&](const auto &p) {
             paths.push_back(get_root_path() + sep + p);

@@ -4,7 +4,6 @@ lyra/1.5.1
 spdlog/1.9.2
 gtest/1.10.0
 fakeit/2.0.8
-boost/1.77.0
 
 [generators]
 cmake
