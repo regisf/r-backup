@@ -49,8 +49,6 @@ CommandLine::CommandLine(int argc, char **argv)
         args.emplace_back(std::string(argv[i]));
     }
 
-    
-
     m_config = std::make_shared<Config>();
 }
 
@@ -212,7 +210,7 @@ Options are:
                 throw CommandLineError("Error: --name option needs an argument");
             }
 
-            m_config->backup.backup_dir_name = args.at(++i);
+            m_config->backup_dir_name = args.at(++i);
             continue;
         }
 

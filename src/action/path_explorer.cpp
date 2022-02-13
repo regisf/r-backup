@@ -124,7 +124,7 @@ std::filesystem::path PathExplorer::guess_last_backup() const
 {
     std::vector<std::filesystem::path> directories;
 
-    auto root_backup = m_config->get_();
+    auto root_backup = m_config->get_real_destination_directory();
     for (const std::filesystem::path & path : std::filesystem::directory_iterator{root_backup})
     {   
         directories.push_back(path);

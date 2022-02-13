@@ -89,7 +89,7 @@ static StatusCode do_backup(const std::shared_ptr<Config>& config)
     if (action::Backup bk_act(config, filecopy); bk_act.can_backup()) {
         std::vector<std::filesystem::path> pathes;
 
-        if (!config->backup_exists()) {
+        if (!config->is_backup_exists()) {
             spdlog::info("Exploring directory {}",config->configFile.get_root_path());
             PathExplorer explorer(config);
             pathes = explorer.explore();

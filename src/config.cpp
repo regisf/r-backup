@@ -30,22 +30,22 @@
 #include <filesystem>
 #include <iostream>
 
-std::filesystem::path Config::get_() const
+std::filesystem::path Config::get_real_destination_directory() const
 {
-    return configFile.get_destination() / backup.backup_dir_name;
+    return configFile.get_destination() / backup_dir_name;
 }
 
 std::filesystem::path Config::get_destination_directory() const
 {
-    return get_() / date::get_now();
+    return get_real_destination_directory() / date::get_now();
 }
 
-bool Config::backup_exists() const
+bool Config::is_backup_exists() const
 {
     return std::filesystem::exists(get_destination_directory());
 }
 
-std::filesystem::path Config::remove_root_path(const std::filesystem::path &path) const
+std::filesystem::path Config::extract_from_root_path(const std::filesystem::path &path) const
 {
     const auto root = configFile.get_root_path();
     const auto path_str = path.string();
@@ -64,7 +64,7 @@ std::filesystem::path Config::remove_root_path(const std::filesystem::path &path
 std::filesystem::path Config::get_destination_directory(const std::filesystem::path &path) const
 {
     const auto parent_path = path.parent_path();
-    const auto parent = remove_root_path(parent_path);
+    const auto parent = extract_from_root_path(parent_path);
 
     return get_destination_directory() / parent / path.filename();
 }
