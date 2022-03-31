@@ -28,7 +28,7 @@
 #include "path_explorer.hpp"
 
 #include "../command_line.hpp"
-#include "../config_file.hpp"
+#include "../config_file_parser.hpp"
 #include "../date.hpp"
 
 #include <iostream>
@@ -50,7 +50,7 @@ namespace action {
             std::cout << "Nothing to backup\n";
         }
 
-        const auto destination = m_config->configFile.get_destination();
+        const auto destination = m_config->destination;
         for (const auto &path : pathes) {
             if (m_config->verbose) {
                 std::cout << "Copying " << path.string() << " to " << (destination / path.filename()).string() << "\n";
@@ -67,10 +67,10 @@ namespace action {
 
         bool status = true;
 
-        if (!std::filesystem::exists(m_config->configFile.get_destination())) {
+        if (!std::filesystem::exists(m_config->destination)) {
             std::stringstream ss;
             ss << "Unable to find the destination directory:"
-               << m_config->configFile.get_destination();
+               << m_config->destination;
 
             status = false;
             m_error_msg = ss.str();

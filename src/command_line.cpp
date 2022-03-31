@@ -25,7 +25,7 @@
  */
 
 #include "command_line.hpp"
-#include "config_file.hpp"
+#include "config_file_parser.hpp"
 #include "values/strategy.hpp"
 
 #include <iostream>
@@ -49,7 +49,8 @@ CommandLine::CommandLine(int argc, char **argv)
         args.emplace_back(std::string(argv[i]));
     }
 
-    m_config = std::make_shared<Config>();
+
+    m_config = ConfigFileParser::read_default_config_file()->to_config();
 }
 
 std::shared_ptr<Config> CommandLine::parse()
@@ -60,8 +61,7 @@ std::shared_ptr<Config> CommandLine::parse()
         ss << "The action " << args.at(First) << " is not known";
         throw CommandLineError(ss.str());
     }
-
-    m_config->configFile.read_default_config_file();
+    
     m_config->action = action_type_from_string(args.at(First));
 
     // process action options
@@ -174,7 +174,6 @@ Options are:
         if (!argument.compare("--dry-run"))
         {
             m_config->dry_run = true;
-            m_config->verbose = true;
             continue;
         }
 
@@ -186,8 +185,10 @@ Options are:
                 throw CommandLineError("Error: --config-file option needs an argument");
             }
 
-            const std::string resolved_path{resolve_path(args.at(++i))};
-            m_config->configFile.parse_file(resolved_path);
+            auto resolved_path{resolve_path(args.at(++i))};
+            auto config_red = ConfigFileParser::read_default_config_file(resolved_path)->to_config();
+            m_config->merge(config_red);
+
             continue;
         }
 
@@ -199,7 +200,7 @@ Options are:
             }
 
             const std::filesystem::path destFile{resolve_path(args.at(++i))};
-            m_config->configFile.set_destination(destFile);
+            m_config->destination = destFile;
             continue;
         }
 
@@ -238,7 +239,7 @@ void CommandLine::restore_configuration()
 CommandLineType CommandLine::action_type_from_string(const std::string &action) const
 {
     CommandLineType type = CommandLineType::Unknown;
-
+    
     if (action == "help" || action == "--help" || action == "-h")
     {
         type = CommandLineType::Help;

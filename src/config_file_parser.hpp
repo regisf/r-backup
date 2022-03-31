@@ -24,30 +24,61 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef CONFIG_FILE_HPP
-#define CONFIG_FILE_HPP
+#ifndef CONFIG_FILE_PARSER_HPP
+#define CONFIG_FILE_PARSER_HPP
+
+#include "config.hpp"
 
 #include <string>
 #include <vector>
 #include <regex>
 #include <filesystem>
+#include <memory>
 
 #include <yaml-cpp/yaml.h>
 
-class ConfigFile
+class ConfigFileParser
 {
 public:
-    explicit ConfigFile() = default;
+    explicit ConfigFileParser() = default;
 
-    void read_default_config_file();
+    /**
+     * @brief Convert the configuration file into a configuraiton object
+     * 
+     * @return std::shared_ptr<Config> The configuration object
+     */
+    std::shared_ptr<Config> to_config();
+
+    /**
+     * @brief Read the cofniguration file from $HOME/.config directory
+     *        if the file exists, parse it
+     * 
+     * @returns The instanciated object
+     */
+    static std::shared_ptr<ConfigFileParser> read_default_config_file();
+
+    /**
+     * @brief Read the configuration file as given. If the file exists, the method parse it
+     * 
+     * @param file_path The config file to read and parser
+     * @return A configuration object
+     */
+    static std::shared_ptr<ConfigFileParser> read_default_config_file(const std::string & file_path);
+
+    /**
+     * @brief Parse the configuration file. If there's a YAML syntax error, exit with status == 1
+     *        else continue anyway.
+     * 
+     * @param path 
+     */
     void parse_file(const std::string &path);
-    std::vector<std::string> &get_excluded_paths();
-    std::vector<std::regex> &get_excluded_patterns();
-    std::vector<std::string> &get_included_directories();
+
+    /**
+     * @brief Get the excluded paths vector
+     * 
+     * @return std::vector<std::string>& The excluded path
+     */
     std::vector<std::string> get_paths_to_explore();
-    std::string get_root_path() const;
-    std::filesystem::path get_destination() const;
-    void set_destination(const std::filesystem::path& path);
     
 private:
     void extract_destination_path();

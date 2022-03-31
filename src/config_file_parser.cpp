@@ -24,16 +24,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config_file.hpp"
+#include "config.hpp"
+#include "config_file_parser.hpp"
 
 #include <iostream>
 #include <cstdlib>
+#include <memory>
 
 #include <yaml-cpp/yaml.h>
 
 static const std::string SystemSeparator{"/"};
 
-void ConfigFile::parse_file(const std::string &path)
+std::shared_ptr<Config> ConfigFileParser::to_config() 
+{
+    auto config = std::make_shared<Config>();
+    config->root_path = m_root;
+    config->destination = m_destination;
+    config->exclusion_paths = m_exclude_paths;
+    config->exclusion_patterns = m_exclude_patterns;
+    config->include_directories = m_include_directories;
+
+    return config;
+
+}
+
+void ConfigFileParser::parse_file(const std::string &path)
 {
     try
     {
@@ -56,7 +71,7 @@ void ConfigFile::parse_file(const std::string &path)
     extract_inclusions();
 }
 
-void ConfigFile::extract_destination_path()
+void ConfigFileParser::extract_destination_path()
 {
     const auto destination = m_config["destination"];
     const auto name = m_config["name"];
@@ -74,7 +89,7 @@ void ConfigFile::extract_destination_path()
     }
 }
 
-void ConfigFile::extract_root_path()
+void ConfigFileParser::extract_root_path()
 {
     const auto root = m_config["root"];
     if (root.IsDefined())
@@ -100,7 +115,7 @@ void ConfigFile::extract_root_path()
     }
 }
 
-void ConfigFile::extract_exclusions()
+void ConfigFileParser::extract_exclusions()
 {
 
     const auto &excluded = m_config["exclude"];
@@ -111,7 +126,7 @@ void ConfigFile::extract_exclusions()
     }
 }
 
-void ConfigFile::extract_excluded_paths(const YAML::Node &excluded)
+void ConfigFileParser::extract_excluded_paths(const YAML::Node &excluded)
 {
     const auto &pathes = excluded["paths"];
     if (pathes.IsDefined())
@@ -123,7 +138,7 @@ void ConfigFile::extract_excluded_paths(const YAML::Node &excluded)
     }
 }
 
-void ConfigFile::extract_excluded_patterns(const YAML::Node &excluded)
+void ConfigFileParser::extract_excluded_patterns(const YAML::Node &excluded)
 {
     const auto &patterns = excluded["patterns"];
     if (patterns.IsDefined())
@@ -144,7 +159,7 @@ void ConfigFile::extract_excluded_patterns(const YAML::Node &excluded)
     }
 }
 
-void ConfigFile::extract_inclusions()
+void ConfigFileParser::extract_inclusions()
 {
     const auto &included = m_config["include"];
     if (included.IsDefined())
@@ -156,65 +171,44 @@ void ConfigFile::extract_inclusions()
     }
 }
 
-std::vector<std::string> &ConfigFile::get_excluded_paths()
-{
-    return m_exclude_paths;
-}
-
-std::vector<std::regex> &ConfigFile::get_excluded_patterns()
-{
-    return m_exclude_patterns;
-}
-
-std::vector<std::string> &ConfigFile::get_included_directories()
-{
-    return m_include_directories;
-}
-
-std::string ConfigFile::get_root_path() const
-{
-    return m_root;
-}
-
-std::filesystem::path ConfigFile::get_destination() const
-{
-    return m_destination;
-}
-
-std::vector<std::string> ConfigFile::get_paths_to_explore()
+std::vector<std::string> ConfigFileParser::get_paths_to_explore()
 {
     std::vector<std::string> paths;
 
     if (m_include_directories.size())
     {
-        const auto sep = get_root_path().ends_with("/") ? "" : "/";
+        const auto sep = m_root.ends_with("/") ? "" : "/";
 
         std::for_each(m_include_directories.begin(), m_include_directories.end(), [&](const auto &p) {
-            paths.push_back(get_root_path() + sep + p);
+            paths.push_back(m_root + sep + p);
         });
     }
 
     else
     {
-        paths.push_back(get_root_path());
+        paths.push_back(m_root);
     }
 
     return paths;
 }
 
-void ConfigFile::set_destination(const std::filesystem::path &path)
-{
-    m_destination = path;
-}
-
-void ConfigFile::read_default_config_file()
+std::shared_ptr<ConfigFileParser> ConfigFileParser::read_default_config_file()
 {
     const std::string home_path{std::getenv("HOME")};
-    std::filesystem::path config_file = std::filesystem::path(home_path) /
-                                        ".config" / "r-backup" / "config.yml";
+    std::filesystem::path config_file = std::filesystem::path(home_path) / ".config" / "r-backup" / "config.yml";
 
-    if (std::filesystem::exists(config_file))
+    return ConfigFileParser::read_default_config_file(config_file.string());
+}
+
+std::shared_ptr<ConfigFileParser> ConfigFileParser::read_default_config_file(const std::string & file_path)
+{
+    auto parser = std::make_shared<ConfigFileParser>();
+ 
+    std::filesystem::path p {file_path};
+    if (std::filesystem::exists(p))
     {
-        parse_file(config_file);
+        parser->parse_file(p);
     }
+
+    return parser;
 }

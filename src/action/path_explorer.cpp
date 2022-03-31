@@ -38,13 +38,13 @@ PathExplorer::PathExplorer(std::shared_ptr<Config> config)
 
 std::vector<std::filesystem::path> PathExplorer::explore()
 {
-    auto directories = m_config->configFile.get_included_directories();
+    auto directories = m_config->include_directories;
     // auto last_backup_date = guess_last_backup();
 
     // No included directory so use backup root directory
     if (!directories.size())
     {
-        directories.push_back(m_config->configFile.get_root_path());
+        directories.push_back(m_config->root_path);
     }
 
     std::for_each(directories.begin(), directories.end(), [&](const auto &path) { explore_directory(path); });
@@ -60,11 +60,11 @@ const bool PathExplorer::should_be_skipped(const std::filesystem::path &p) const
     }
 
     bool is_excluded = false;
-    auto &patterns = m_config->configFile.get_excluded_patterns();
+    auto &patterns = m_config->exclusion_paths;
 
     for (const auto &pattern : patterns)
     {
-        if (std::regex_search(p.string(), pattern))
+        if (std::regex_search(p.string(), std::regex{pattern}))
         {
             is_excluded = true;
             break;
@@ -73,7 +73,7 @@ const bool PathExplorer::should_be_skipped(const std::filesystem::path &p) const
 
     if (!is_excluded)
     {
-        auto &pathes = m_config->configFile.get_excluded_paths();
+        auto &pathes = m_config->exclusion_paths;
         for (const auto &path : pathes)
         {
             if (p.string().starts_with(path))

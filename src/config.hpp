@@ -27,12 +27,14 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-#include "config_file.hpp"
 #include "values/strategy.hpp"
 #include "values/destination.hpp"
 #include "values/configuration.hpp"
 
 #include <string>
+#include <vector>
+#include <filesystem>
+#include <regex>
 
 enum class CommandLineType
 {
@@ -53,6 +55,7 @@ public:
     virtual bool is_backup_exists() const = 0;
     virtual std::filesystem::path get_destination_directory(const std::filesystem::path &path) const = 0;
     virtual bool is_destination_dir_exists(const std::filesystem::path &source) const = 0;
+    virtual void merge(const std::shared_ptr<IConfig> & config) = 0;
 };
 
 
@@ -70,15 +73,19 @@ struct Config : IConfig
         Difference
     };
 
+    std::vector<std::string> include_directories;
+    std::vector<std::regex> exclusion_patterns;
+    std::vector<std::string> exclusion_paths;
+
     bool verbose{false};
     bool dry_run{false};
 
+    std::filesystem::path destination;
+    std::filesystem::path root_path;
+    std::string backup_dir_name{};
+
     Strategy strategy{Strategy::NotSet};
     CommandLineType action{CommandLineType::Unknown};
-    ConfigFile configFile;
-
-
-    std::string backup_dir_name{};
 
     /**
      * @brief Get the destination directory
@@ -118,6 +125,13 @@ struct Config : IConfig
      * @return std::filesystem::path
      */
     std::filesystem::path get_real_destination_directory() const override;
+
+    /**
+     * @brief Merge a configuration with this one
+     * 
+     * @param config The configuration source to merge with this object
+     */
+    void merge(const std::shared_ptr<IConfig> & src) override;
 
 private:
     /**

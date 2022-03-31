@@ -43,11 +43,12 @@
 #include <memory>
 
 #include <lyra/lyra.hpp>
-#include <spdlog/spdlog.h>
+// #include <spdlog/spdlog.h>
 
 #define RBackupVersion "0.1.0"
 
-enum class StatusCode {
+enum class StatusCode
+{
     SuccessStatusCode = EXIT_SUCCESS,
     DefaultStatusCode = EXIT_SUCCESS,
     BackupActionStatus = 2
@@ -80,27 +81,34 @@ Options:
  * Process the backup action.
  * The return code is 2
  */
-static StatusCode do_backup(const std::shared_ptr<Config>& config)
+static StatusCode do_backup(const std::shared_ptr<Config> &config)
 {
     StatusCode ret_val{StatusCode::DefaultStatusCode};
 
     FileCopy filecopy{config};
 
-    if (action::Backup bk_act(config, filecopy); bk_act.can_backup()) {
+    if (action::Backup bk_act(config, filecopy); bk_act.can_backup())
+    {
         std::vector<std::filesystem::path> pathes;
 
-        if (!config->is_backup_exists()) {
-            spdlog::info("Exploring directory {}",config->configFile.get_root_path());
+        if (!config->is_backup_exists())
+        {
+            // spdlog::info("Exploring directory {}",config->root_path);
+            std::cout << "Exploring directory " << config->root_path << "\n";
             PathExplorer explorer(config);
             pathes = explorer.explore();
-            spdlog::info("Got {} files found", pathes.size());
-        } else {
-            std::cout
-                    << "There's nothing to backup because it is already backuped.\n";
+            std::cout << "Got " << pathes.size() << " files found\n";
+            // spdlog::info("Got {} files found", pathes.size());
+        }
+        else
+        {
+            std::cout << "There's nothing to backup because it is already backuped.\n";
         }
 
         bk_act.backup(pathes);
-    } else {
+    }
+    else
+    {
         std::cerr << "Error: Unable to backup because: " << bk_act.error_message()
                   << std::endl;
         ret_val = StatusCode::BackupActionStatus;
@@ -109,11 +117,12 @@ static StatusCode do_backup(const std::shared_ptr<Config>& config)
     return ret_val;
 }
 
-static StatusCode process_action(const std::shared_ptr<Config>& config)
+static StatusCode process_action(const std::shared_ptr<Config> &config)
 {
     auto ret_val = StatusCode::SuccessStatusCode;
-
-    switch (config->action) {
+    
+    switch (config->action)
+    {
     case CommandLineType::Help:
         display_usage();
         break;
@@ -143,43 +152,46 @@ static StatusCode process_action(const std::shared_ptr<Config>& config)
     return ret_val;
 }
 
-static std::shared_ptr<Config> parse_commandline(int argc, char** argv)
+static std::shared_ptr<Config> parse_commandline(int argc, char **argv)
 {
-    bool show_help { false };
+    bool show_help{false};
     std::string strategy;
     std::string config_file;
     std::string destination;
     int nth{0};
 
     auto config = std::make_shared<Config>();
-    
+
     auto cli = lyra::cli() | lyra::help(show_help);
 
-    auto version_group = lyra::command("version", [](const lyra::group& g) { 
+    auto version_group = lyra::command("version", [](const lyra::group &g)
+                                       { 
         std::cout << "R-Backup - Version " << RBackupVersion << std::endl;
-        std::exit(EXIT_SUCCESS);
-    }).help("Display the current version");
+        std::exit(EXIT_SUCCESS); })
+                             .help("Display the current version");
 
-    auto backup_group = lyra::command("backup", [](const lyra::group& g) {})
-            .help("Display backup help")
-            .add_argument(lyra::opt(config->verbose)["--verbose"]("Set verbosity to on").optional())
-            .add_argument(lyra::opt(config->dry_run)["--dry-run"]("Do nothing, just simulate").optional())
-            .add_argument(lyra::opt(strategy, "strategy")["--strategy"]("Set the backup strategy").optional())
-            .add_argument(lyra::opt(nth, "nth")["--nth"]("How many").optional())
-            .add_argument(lyra::opt(destination, "destination")["--destination"]("Set the destination directory").optional())
-            .add_argument(lyra::opt(config_file, "configuration_file")["--config-file"]("set the config file that contains ").optional());
+    auto backup_group = lyra::command("backup", [](const lyra::group &g) {})
+                            .help("Display backup help")
+                            .add_argument(lyra::opt(config->verbose)["--verbose"]("Set verbosity to on").optional())
+                            .add_argument(lyra::opt(config->dry_run)["--dry-run"]("Do nothing, just simulate").optional())
+                            .add_argument(lyra::opt(strategy, "strategy")["--strategy"]("Set the backup strategy").optional())
+                            .add_argument(lyra::opt(nth, "nth")["--nth"]("How many").optional())
+                            .add_argument(lyra::opt(destination, "destination")["--destination"]("Set the destination directory").optional())
+                            .add_argument(lyra::opt(config_file, "configuration_file")["--config-file"]("set the config file that contains ").optional());
 
     cli.add_argument(version_group);
     cli.add_argument(backup_group);
     cli.add_argument(version_group);
 
-    if (auto result = cli.parse({ argc, argv }); !result) {
+    if (auto result = cli.parse({argc, argv}); !result)
+    {
         std::cerr << "Error in command line: " << result.errorMessage()
                   << std::endl;
         std::exit(1);
     }
 
-    if (show_help) {
+    if (show_help)
+    {
         std::cout << cli << "\n";
         std::exit(EXIT_SUCCESS);
     }
@@ -187,7 +199,7 @@ static std::shared_ptr<Config> parse_commandline(int argc, char** argv)
     return config;
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     auto config = parse_commandline(argc, argv);
 

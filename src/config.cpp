@@ -32,7 +32,7 @@
 
 std::filesystem::path Config::get_real_destination_directory() const
 {
-    return configFile.get_destination() / backup_dir_name;
+    return destination / backup_dir_name;
 }
 
 std::filesystem::path Config::get_destination_directory() const
@@ -47,9 +47,8 @@ bool Config::is_backup_exists() const
 
 std::filesystem::path Config::extract_from_root_path(const std::filesystem::path &path) const
 {
-    const auto root = configFile.get_root_path();
     const auto path_str = path.string();
-    std::size_t root_size = root.size();
+    std::size_t root_size = root_path.string().size();
 
     if (path_str.size() < root_size)
     {
@@ -76,3 +75,16 @@ bool Config::is_destination_dir_exists(const std::filesystem::path &source) cons
     return std::filesystem::exists(dest_parent) && std::filesystem::is_directory(dest_parent);
 }
 
+void Config::merge(const std::shared_ptr<IConfig> & src)
+{
+    const auto config = (const std::shared_ptr<Config>&) src;  
+    
+    include_directories = config->include_directories;
+    exclusion_paths = config->exclusion_paths;
+    exclusion_patterns = config->exclusion_patterns;
+    destination = config->destination;
+    root_path = config->root_path;
+    backup_dir_name = config->backup_dir_name;
+    strategy = config->strategy;
+    action = config->action;
+}
