@@ -21,6 +21,12 @@ Options are:
 
 )";
 
+#define EXPECTED_NEXT_ARG(a, b, c) \
+    if ((a + 1) == b) { \
+        throw CommandLineError("Error: --##c option need an extra argument"); \
+    }
+
+
 BackupCommandLine::BackupCommandLine(const std::vector<std::string> & args) : args(args)
 {
 }
@@ -42,10 +48,7 @@ void BackupCommandLine::parse(exit_callback exit_cb)
 
         else if (!argument.compare("--strategy"))
         {
-            if (i + 1 == l)
-            {
-                throw CommandLineError("Error: --strategy option needs an argument");
-            }
+            EXPECTED_NEXT_ARG(i, l, strategy)
 
             strategy = args.at(++i);
             unknown_option = false;
@@ -53,10 +56,7 @@ void BackupCommandLine::parse(exit_callback exit_cb)
 
         else if (!argument.compare("--nth"))
         {
-            if (i + 1 == l)
-            {
-                throw CommandLineError("Error: --nth option needs an argument");
-            }
+            EXPECTED_NEXT_ARG(i, l, nth)
 
             std::stringstream ss;
             ss << args.at(++i);
