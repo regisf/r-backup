@@ -25,6 +25,7 @@
  */
 
 #include "command_line.hpp"
+#include "command_line_action.h"
 #include "config_file_parser.hpp"
 #include "values/strategy.hpp"
 
@@ -49,22 +50,14 @@ CommandLine::CommandLine(int argc, char **argv)
         args.emplace_back(std::string(argv[i]));
     }
 
-    m_config = ConfigFileParser::read_default_config_file()->to_config();
+    //m_config = ConfigFileParser::read_default_config_file()->to_config();
 }
 
 std::shared_ptr<Config> CommandLine::parse()
-{
-    if (!is_known_action(args.at(First)))
-    {
-        std::stringstream ss;
-        ss << "The action " << args.at(First) << " is not known";
-        throw CommandLineError(ss.str());
-    }
-    
-    m_config->action = action_type_from_string(args.at(First));
+{    
+    auto action = CommandLineAction::from_string(args.at(First));
 
-    // process action options
-    switch (m_config->action)
+    switch (action)
     {
     case CommandLineType::Init:
         init_configuration();
@@ -79,21 +72,16 @@ std::shared_ptr<Config> CommandLine::parse()
         break;
 
     case CommandLineType::Start:
-        break;
-
     case CommandLineType::Stop:
-        break;
-
     default:
-        break;
+        {
+            std::stringstream ss;
+            ss << "The action " << args.at(First) << " is not known";
+            throw CommandLineError(ss.str());
+        }
     }
 
     return m_config;
-}
-
- bool CommandLine::is_known_action(const std::string &action) const
-{
-    return (action == "help" || action == "--help" || action == "-h" || action == "init" || action == "backup" || action == "restore");
 }
 
 std::filesystem::path CommandLine::resolve_path(const std::string &path) const

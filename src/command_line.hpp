@@ -58,8 +58,17 @@ public:
 class CommandLine : private ICommandLine
 {
 public:
+    /**
+     * @brief CommandLine
+     * @param argc The number of arguments
+     * @param argv A list of arguments
+     */
     explicit CommandLine(int argc, char **argv);
 
+    /**
+     * @brief Parses the command line, and returns the configuration
+     * @return the configuration object
+     */
     std::shared_ptr<Config> parse();
 
     /**
@@ -69,7 +78,6 @@ public:
     std::vector<std::string> get_args() noexcept;
 
 private:
-    bool is_known_action(const std::string &action) const;
     std::filesystem::path resolve_path(const std::string &path) const;
     void backup_configuration();
     void init_configuration();
