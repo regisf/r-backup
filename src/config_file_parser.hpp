@@ -37,7 +37,13 @@
 
 #include <yaml-cpp/yaml.h>
 
-class ConfigFileParser
+class IConfigFileParser
+{
+public:
+    virtual std::shared_ptr<Config> to_config() = 0;
+};
+
+class ConfigFileParser : public IConfigFileParser
 {
 public:
     explicit ConfigFileParser() = default;
@@ -47,7 +53,7 @@ public:
      * 
      * @return std::shared_ptr<Config> The configuration object
      */
-    std::shared_ptr<Config> to_config();
+    std::shared_ptr<Config> to_config() override;
 
     /**
      * @brief Read the cofniguration file from $HOME/.config directory

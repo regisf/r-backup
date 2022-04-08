@@ -48,12 +48,25 @@ public:
     }
 };
 
-class CommandLine
+class ICommandLine
 {
 public:
-    CommandLine(int argc, char **argv);
+    virtual std::shared_ptr<Config> parse() = 0;
+    virtual std::vector<std::string> get_args() noexcept = 0;
+};
+
+class CommandLine : private ICommandLine
+{
+public:
+    explicit CommandLine(int argc, char **argv);
 
     std::shared_ptr<Config> parse();
+
+    /**
+     * @brief Get the currated list of argument
+     * @return The command line argument
+     */
+    std::vector<std::string> get_args() noexcept;
 
 private:
     bool is_known_action(const std::string &action) const;

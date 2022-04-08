@@ -49,7 +49,6 @@ CommandLine::CommandLine(int argc, char **argv)
         args.emplace_back(std::string(argv[i]));
     }
 
-
     m_config = ConfigFileParser::read_default_config_file()->to_config();
 }
 
@@ -266,4 +265,9 @@ CommandLineType CommandLine::action_type_from_string(const std::string &action) 
     }
 
     return type;
+}
+
+std::vector<std::string> CommandLine::get_args() noexcept
+{
+    return args;
 }

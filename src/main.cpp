@@ -42,7 +42,7 @@
 #include <iostream>
 #include <memory>
 
-#include <lyra/lyra.hpp>
+// #include <lyra/lyra.hpp>
 // #include <spdlog/spdlog.h>
 
 #define RBackupVersion "0.1.0"
@@ -161,7 +161,7 @@ static std::shared_ptr<Config> parse_commandline(int argc, char **argv)
     int nth{0};
 
     auto config = std::make_shared<Config>();
-
+/*
     auto cli = lyra::cli() | lyra::help(show_help);
 
     auto version_group = lyra::command("version", [](const lyra::group &g)
@@ -195,7 +195,7 @@ static std::shared_ptr<Config> parse_commandline(int argc, char **argv)
         std::cout << cli << "\n";
         std::exit(EXIT_SUCCESS);
     }
-
+*/
     return config;
 }
 
