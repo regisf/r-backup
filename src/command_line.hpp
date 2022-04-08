@@ -83,8 +83,6 @@ private:
     void init_configuration();
     void restore_configuration();
 
-    CommandLineType action_type_from_string(const std::string& action) const;
-
 private:
     std::shared_ptr<Config> m_config;
     std::vector<std::string> args;

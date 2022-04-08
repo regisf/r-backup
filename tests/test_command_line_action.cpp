@@ -1,5 +1,5 @@
 #include "../src/config.hpp"
-#include "../src/command_line_action.h"
+#include "../src/command_line_action.hpp"
 
 #include <gtest/gtest.h>
 

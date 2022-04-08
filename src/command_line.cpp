@@ -25,7 +25,7 @@
  */
 
 #include "command_line.hpp"
-#include "command_line_action.h"
+#include "command_line_action.hpp"
 #include "config_file_parser.hpp"
 #include "values/strategy.hpp"
 
@@ -64,6 +64,7 @@ std::shared_ptr<Config> CommandLine::parse()
         break;
 
     case CommandLineType::Backup:
+        //BackupCommandLine(get_args());
         backup_configuration();
         break;
 
@@ -103,38 +104,7 @@ void CommandLine::backup_configuration()
     for (int i = 1, l = args.size(); i < l; ++i)
     {
         const std::string argument{args.at(i)};
-        if (!argument.compare("--help") || !argument.compare("-h"))
-        {
-            std::cout << R"(
-r-backup backup [OPTIONS]
 
-The options given override the default configuration file. 
-Options are:
-    --config-file: set the config file that contains 
-    --destination: Set the destionation
-    --name: Set the destination name.
-    --strategy: The default backup strategy.
-        Strategies are 
-            keep-all: Keep all backups. You remove old ones manually
-            keep-nth: Keep only nth last backup. Implies --nth argument
-            remove-previous:  Keep only one backup.
-            difference: Backup only the last 
-    --nth: The number of backup to keep (implies --strategy keep_nth)
-
-)";
-            std::exit(0);
-        }
-
-        if (!argument.compare("--strategy")) 
-        {
-            if (i + 1 == l)
-            {
-                throw CommandLineError("Error: --strategy option needs an argument");
-            }
-            
-//            m_config->strategy.value = StrategyValue(args.at(++i));
-            continue;
-        }
 
         if (!argument.compare("--nth")) 
         {
@@ -212,7 +182,6 @@ Options are:
         ss << "Error: Unknown option \"" << args.at(i) << "\"";
         throw CommandLineError(ss.str());
     }
-
 }
 
 void CommandLine::init_configuration()
@@ -221,38 +190,6 @@ void CommandLine::init_configuration()
 
 void CommandLine::restore_configuration()
 {
-}
-
-CommandLineType CommandLine::action_type_from_string(const std::string &action) const
-{
-    CommandLineType type = CommandLineType::Unknown;
-    
-    if (action == "help" || action == "--help" || action == "-h")
-    {
-        type = CommandLineType::Help;
-    }
-    else if (action == "init")
-    {
-        type = CommandLineType::Init;
-    }
-    else if (action == "backup")
-    {
-        type = CommandLineType::Backup;
-    }
-    else if (action == "restore")
-    {
-        type = CommandLineType::Restore;
-    }
-    else if (action == "start")
-    {
-        type = CommandLineType::Start;
-    }
-    else if (action == "stop")
-    {
-        type = CommandLineType::Stop;
-    }
-
-    return type;
 }
 
 std::vector<std::string> CommandLine::get_args() noexcept
