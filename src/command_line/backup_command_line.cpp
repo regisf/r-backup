@@ -22,7 +22,7 @@ Options are:
 
 )";
 
-#define EXPECTED_NEXT_ARG(a, b, c) \
+#define EXPECT_NEXT_ARG(a, b, c) \
     if ((a + 1) == b) { \
         throw CommandLineError("Error: --##c option need an extra argument"); \
     }
@@ -30,6 +30,7 @@ Options are:
 
 BackupCommandLine::BackupCommandLine(const std::vector<std::string> & args) : args(args)
 {
+
 }
 
 void BackupCommandLine::parse(exit_callback exit_cb)
@@ -49,19 +50,51 @@ void BackupCommandLine::parse(exit_callback exit_cb)
 
         else if (!argument.compare("--strategy"))
         {
-            EXPECTED_NEXT_ARG(i, l, strategy)
-
+            EXPECT_NEXT_ARG(i, l, strategy)
             strategy = args.at(++i);
             unknown_option = false;
         }
 
         else if (!argument.compare("--nth"))
         {
-            EXPECTED_NEXT_ARG(i, l, nth)
-
+            EXPECT_NEXT_ARG(i, l, nth)
             std::stringstream ss;
             ss << args.at(++i);
             ss >> nth;
+        }
+
+        else if (!argument.compare("--dry-run"))
+        {
+            dry_run = true;
+            unknown_option = false;
+        }
+
+        else if (!argument.compare("--config-file"))
+        {
+
+            EXPECT_NEXT_ARG(i, l, config-file)
+            config_file = args.at(++i);
+            unknown_option = false;
+        }
+
+        else if (!argument.compare("--destination"))
+        {
+            EXPECT_NEXT_ARG(i, l, destination)
+            destination = args.at(++i);
+            unknown_option = false;
+        }
+
+        else if (!argument.compare("--backup-directory-name"))
+        {
+            EXPECT_NEXT_ARG(i,l, backup-directory-name)
+            backup_dir_name = args.at(++i);
+            unknown_option = false;
+        }
+
+        else if (!argument.compare("--verbose"))
+        {
+            verbose = true;
+            unknown_option = false;
         }
 
         else
@@ -85,4 +118,29 @@ std::string BackupCommandLine::get_strategy() const
 int BackupCommandLine::get_nth() const
 {
     return nth;
+}
+
+bool BackupCommandLine::get_dry_run() const
+{
+    return dry_run;
+}
+
+std::filesystem::path BackupCommandLine::get_config_file() const
+{
+    return config_file;
+}
+
+std::filesystem::path BackupCommandLine::get_destination() const
+{
+    return destination;
+}
+
+std::filesystem::path BackupCommandLine::get_backup_directory_name() const
+{
+    return backup_dir_name;
+}
+
+bool BackupCommandLine::get_verbose() const
+{
+    return verbose;
 }

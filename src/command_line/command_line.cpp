@@ -24,10 +24,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "backup_command_line.hpp"
 #include "command_line.hpp"
 #include "command_line_action.hpp"
+
 #include "../config_file_parser.hpp"
-#include "../values/strategy.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -101,65 +102,8 @@ std::filesystem::path CommandLine::resolve_path(const std::string &path) const
 
 void CommandLine::backup_configuration()
 {
-    for (int i = 1, l = args.size(); i < l; ++i)
-    {
-        const std::string argument{args.at(i)};
-
-
-        if (!argument.compare("--dry-run"))
-        {
-            m_config->dry_run = true;
-            continue;
-        }
-
-        if (!argument.compare("--config-file"))
-        {
-
-            if (i + 1 == l)
-            {
-                throw CommandLineError("Error: --config-file option needs an argument");
-            }
-
-            auto resolved_path{resolve_path(args.at(++i))};
-            auto config_red = ConfigFileParser::read_default_config_file(resolved_path)->to_config();
-            m_config->merge(config_red);
-
-            continue;
-        }
-
-        if (!argument.compare("--destination"))
-        {
-            if (i + 1 == l)
-            {
-                throw CommandLineError("Error: --destination option needs an argument");
-            }
-
-            const std::filesystem::path destFile{resolve_path(args.at(++i))};
-            m_config->destination = destFile;
-            continue;
-        }
-
-        if (!argument.compare("--name"))
-        {
-            if (i + 1 == l)
-            {
-                throw CommandLineError("Error: --name option needs an argument");
-            }
-
-            m_config->backup_dir_name = args.at(++i);
-            continue;
-        }
-
-        if (!argument.compare("--verbose"))
-        {
-            m_config->verbose = true;
-            continue;
-        }
-
-        std::stringstream ss;
-        ss << "Error: Unknown option \"" << args.at(i) << "\"";
-        throw CommandLineError(ss.str());
-    }
+    auto backup_conf = BackupCommandLine(args);
+    backup_conf.parse();
 }
 
 void CommandLine::init_configuration()

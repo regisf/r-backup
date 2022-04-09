@@ -90,3 +90,97 @@ TEST(TestBackupCommandLine, test_nth_with_value)
 
     ASSERT_EQ(cmdLine.get_nth(), expected_nth_int);
 }
+
+TEST(TestBackupCommandLine, test_dry_run_with_value)
+{
+    auto cmdLine = BackupCommandLine({"backup", "--dry-run"});
+
+    cmdLine.parse();
+
+    ASSERT_TRUE(cmdLine.get_dry_run());
+}
+
+TEST(TestBackupCommandLine, test_dry_run_default_value_is_false)
+{
+    auto cmdLine = BackupCommandLine({"backup"});
+
+    cmdLine.parse();
+
+    ASSERT_FALSE(cmdLine.get_dry_run());
+}
+
+TEST(TestBackupCommandLine, test_config_file_with_value_should_load_file)
+ {
+    auto expected_file_name = "aConfigFile";
+    auto cmdLine = BackupCommandLine({"backup", "--config-file", expected_file_name});
+
+    cmdLine.parse();
+
+    ASSERT_EQ(expected_file_name, cmdLine.get_config_file());
+ }
+
+TEST(TestBackupCommandLine, test_config_file_without_value_should_fail)
+{
+    auto cmdLine = BackupCommandLine({"backup", "--config-file"});
+
+    try
+    {
+        cmdLine.parse();
+        FAIL();
+    }
+    catch (CommandLineError &err)
+    {
+        SUCCEED();
+    }
+}
+
+TEST(TestBackupCommandLine, test_destination_with_value)
+{
+    auto expected_destination = "a-destination-directory";
+    auto cmdLine = BackupCommandLine({"backup", "--destination", expected_destination});
+
+    cmdLine.parse();
+
+    ASSERT_EQ(expected_destination, cmdLine.get_destination());
+}
+
+TEST(TestBackupCommandLine, test_backup_dir_name_with_value)
+{
+    auto expected_name = "backupname";
+    auto cmd_line= BackupCommandLine({"backup", "--backup-directory-name", expected_name});
+    cmd_line.parse();
+    ASSERT_EQ(expected_name, cmd_line.get_backup_directory_name());
+}
+
+TEST(TestBackupCommandLine, test_backup_dir_name_without_value_should_fail)
+{
+    auto cmdLine = BackupCommandLine({"backup", "--backup-directory-name"});
+
+    try
+    {
+        cmdLine.parse();
+        FAIL();
+    }
+    catch (CommandLineError &err)
+    {
+        SUCCEED();
+    }
+}
+
+TEST(TestBackupCommandLine, test_verbose_argument)
+{
+    auto cmdLine = BackupCommandLine({"backup", "--verbose"});
+
+    cmdLine.parse();
+
+    ASSERT_TRUE(cmdLine.get_verbose());
+}
+
+TEST(TestBackupCommandLine, test_verbose_is_false_by_default)
+{
+    auto cmdLine = BackupCommandLine({"backup"});
+
+    cmdLine.parse();
+
+    ASSERT_FALSE(cmdLine.get_verbose());
+}
