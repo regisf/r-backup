@@ -26,8 +26,8 @@
 
 #include "command_line.hpp"
 #include "command_line_action.hpp"
-#include "config_file_parser.hpp"
-#include "values/strategy.hpp"
+#include "../config_file_parser.hpp"
+#include "../values/strategy.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -105,28 +105,6 @@ void CommandLine::backup_configuration()
     {
         const std::string argument{args.at(i)};
 
-
-        if (!argument.compare("--nth")) 
-        {
-            if (i + 1 == l)
-            {
-                throw CommandLineError("Error: --nth option needs an argument");
-            }
-            
-//            try
-//            {
-//                m_config->strategy.nth = NthValue(args.at(++i));
-//            }
-//            catch (NthValueException &e)
-//            {
-//                std::stringstream ss;
-//                ss << "Error: " << e.message();
-
-//                throw CommandLineError(ss.str());
-//            }
-
-            continue;
-        }
 
         if (!argument.compare("--dry-run"))
         {

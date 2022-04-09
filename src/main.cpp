@@ -36,7 +36,7 @@
 #include "action/backup.hpp"
 #include "action/initializer.hpp"
 #include "action/path_explorer.hpp"
-#include "command_line.hpp"
+#include "command_line/command_line.hpp"
 
 #include <cstdlib>
 #include <iostream>

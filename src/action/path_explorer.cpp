@@ -25,7 +25,7 @@
  */
 
 #include "path_explorer.hpp"
-#include "../command_line.hpp"
+#include "../command_line/command_line.hpp"
 #include "../date.hpp"
 
 #include <algorithm>

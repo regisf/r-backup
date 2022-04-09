@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../../src/command_line/backup_command_line.hpp"
-#include "../../src/command_line.hpp"
+#include "../../src/command_line/command_line.hpp"
 
 
 TEST(TestBackupCommandLine, test_backup_command_line_with_args_should_throw_on_unknown_argument)

@@ -25,7 +25,7 @@
  */
 
 #include "initializer.hpp"
-#include "../command_line.hpp"
+#include "../command_line/command_line.hpp"
 
 #include <filesystem>
 #include <iostream>

@@ -27,7 +27,7 @@
 #ifndef PATH_EXPLORER_HPP
 #define PATH_EXPLORER_HPP
 
-#include "../command_line.hpp"
+#include "../command_line/command_line.hpp"
 
 #include <vector>
 #include <string>
