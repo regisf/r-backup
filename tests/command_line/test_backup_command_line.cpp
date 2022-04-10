@@ -35,6 +35,11 @@ TEST(TestBackupCommandLine, test_long_help_argument_should_exit)
 
     ASSERT_TRUE(mock::exit_called);
     mock::exit_called = false;
+
+    cmdLine = BackupCommandLine({"backup", "help"});
+    cmdLine.parse(mock::exit);
+    ASSERT_TRUE(mock::exit_called);
+    mock::exit_called = false;
 }
 
 TEST(TestBackupCommandLine, test_strategy_without_value_only_should_fail)

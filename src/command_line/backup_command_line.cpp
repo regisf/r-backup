@@ -44,7 +44,7 @@ BackupCommandLineOptions BackupCommandLine::parse(exit_callback exit_cb)
     {
         const std::string argument{args.at(i)};
 
-        if (!argument.compare("--help") || !argument.compare("-h"))
+        if (!(argument.compare("help") && argument.compare("--help") && argument.compare("-h")))
         {
             std::cerr << USAGE;
             exit_cb(0);
