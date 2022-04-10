@@ -56,22 +56,24 @@ CommandLine::CommandLine(int argc, char **argv)
 
 std::shared_ptr<Config> CommandLine::parse()
 {    
+    auto config = std::make_shared<Config>();
     auto action = CommandLineAction::from_string(args.at(First));
 
     switch (action)
     {
+    case CommandLineType::Help:
+        config->action = CommandLineType::Help;
+        break;
+
     case CommandLineType::Init:
         init_configuration();
         break;
 
     case CommandLineType::Backup:
-        backup_configuration();
+        config->set_backup_configuration(backup_configuration());
         break;
 
     case CommandLineType::Restore:
-        restore_configuration();
-        break;
-
     case CommandLineType::Start:
     case CommandLineType::Stop:
     default:
@@ -82,27 +84,13 @@ std::shared_ptr<Config> CommandLine::parse()
         }
     }
 
-    return m_config;
+    return config;
 }
 
-std::filesystem::path CommandLine::resolve_path(const std::string &path) const
-{
-    try
-    {
-        return std::filesystem::canonical(std::filesystem::path(path));
-    }
-    catch (std::filesystem::filesystem_error &err)
-    {
-        std::stringstream ss;
-        ss << "Error : The file \"" << path << "\" doesn't exist";
-        throw CommandLineError(ss.str());
-    }
-}
-
-void CommandLine::backup_configuration()
+BackupCommandLineOptions CommandLine::backup_configuration()
 {
     auto backup_conf = BackupCommandLine(args);
-    backup_conf.parse();
+    return backup_conf.parse();
 }
 
 void CommandLine::init_configuration()

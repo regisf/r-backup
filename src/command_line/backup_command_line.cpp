@@ -36,7 +36,7 @@ BackupCommandLine::BackupCommandLine(const std::vector<std::string> & args) : ar
 
 }
 
-void BackupCommandLine::parse(exit_callback exit_cb)
+BackupCommandLineOptions BackupCommandLine::parse(exit_callback exit_cb)
 {
     bool unknown_option{false};
 
@@ -54,7 +54,7 @@ void BackupCommandLine::parse(exit_callback exit_cb)
         else if (!argument.compare("--strategy"))
         {
             EXPECT_NEXT_ARG(i, l, strategy)
-            strategy = args.at(++i);
+            options.strategy = args.at(++i);
             unknown_option = false;
         }
 
@@ -63,12 +63,12 @@ void BackupCommandLine::parse(exit_callback exit_cb)
             EXPECT_NEXT_ARG(i, l, nth)
             std::stringstream ss;
             ss << args.at(++i);
-            ss >> nth;
+            ss >> options.nth;
         }
 
         else if (!argument.compare("--dry-run"))
         {
-            dry_run = true;
+            options.dry_run = true;
             unknown_option = false;
         }
 
@@ -76,27 +76,27 @@ void BackupCommandLine::parse(exit_callback exit_cb)
         {
 
             EXPECT_NEXT_ARG(i, l, config-file)
-            config_file = args.at(++i);
+            options.config_file = args.at(++i);
             unknown_option = false;
         }
 
         else if (!argument.compare("--destination"))
         {
             EXPECT_NEXT_ARG(i, l, destination)
-            destination = args.at(++i);
+            options.destination = args.at(++i);
             unknown_option = false;
         }
 
         else if (!argument.compare("--backup-directory-name"))
         {
             EXPECT_NEXT_ARG(i,l, backup-directory-name)
-            backup_dir_name = args.at(++i);
+            options.backup_dir_name = args.at(++i);
             unknown_option = false;
         }
 
         else if (!argument.compare("--verbose"))
         {
-            verbose = true;
+            options.verbose = true;
             unknown_option = false;
         }
 
@@ -111,39 +111,6 @@ void BackupCommandLine::parse(exit_callback exit_cb)
     {
         throw CommandLineError("Unknown argument for backup action");
     }
-}
 
-std::string BackupCommandLine::get_strategy() const
-{
-   return strategy;
-}
-
-int BackupCommandLine::get_nth() const
-{
-    return nth;
-}
-
-bool BackupCommandLine::get_dry_run() const
-{
-    return dry_run;
-}
-
-std::filesystem::path BackupCommandLine::get_config_file() const
-{
-    return config_file;
-}
-
-std::filesystem::path BackupCommandLine::get_destination() const
-{
-    return destination;
-}
-
-std::filesystem::path BackupCommandLine::get_backup_directory_name() const
-{
-    return backup_dir_name;
-}
-
-bool BackupCommandLine::get_verbose() const
-{
-    return verbose;
+    return options;
 }

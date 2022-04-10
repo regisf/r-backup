@@ -7,43 +7,8 @@
 
 using exit_callback = void(*)(int);
 
-class IBackupCommandLine
+struct BackupCommandLineOptions
 {
-public:
-    virtual void parse(exit_callback exit_cb) = 0;
-    virtual std::string get_strategy() const = 0;
-    virtual int get_nth() const = 0;
-    virtual bool get_dry_run() const = 0;
-    virtual std::filesystem::path get_config_file() const = 0;
-    virtual std::filesystem::path get_destination() const = 0;
-    virtual std::filesystem::path get_backup_directory_name() const = 0;
-    virtual bool get_verbose() const = 0;
-};
-
-class BackupCommandLine : private IBackupCommandLine
-{
-public:
-    explicit BackupCommandLine(const std::vector<std::string> & args);
-
-    void parse(exit_callback exit_cb = &std::exit) override;
-
-    std::string get_strategy() const override;
-
-    int get_nth() const override;
-
-    bool get_dry_run() const override;
-
-    std::filesystem::path get_config_file() const override;
-
-    std::filesystem::path get_destination() const override;
-
-    std::filesystem::path get_backup_directory_name() const override;
-
-    bool get_verbose() const override;
-
-private:
-    std::vector<std::string> args;
-
     std::string strategy;
 
     int nth{-1};
@@ -57,6 +22,24 @@ private:
     std::filesystem::path destination;
 
     std::filesystem::path backup_dir_name;
+};
+
+class IBackupCommandLine
+{
+public:
+    virtual BackupCommandLineOptions parse(exit_callback exit_cb) = 0;
+};
+
+class BackupCommandLine : private IBackupCommandLine
+{
+public:
+    explicit BackupCommandLine(const std::vector<std::string> & args);
+
+    BackupCommandLineOptions parse(exit_callback exit_cb = &std::exit) override;
+
+private:
+    std::vector<std::string> args;
+    BackupCommandLineOptions options;
 };
 
 #endif // BACKUPCOMMANDLINE_HPP

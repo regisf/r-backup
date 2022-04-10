@@ -20,7 +20,7 @@ void FileCopy::copy_file(const std::filesystem::path &source, const std::filesys
 
 Status FileCopy::create_parent_directories(const std::filesystem::path &dest_parent)
 {
-    if (m_config->dry_run) 
+    if (m_config->backup.dry_run)
     {
         std::cout << "Creating directory \"" << dest_parent.string() << "\"\n";
     }
@@ -41,7 +41,7 @@ Status FileCopy::create_parent_directories(const std::filesystem::path &dest_par
 
 void FileCopy::effective_copy(const std::filesystem::path &source, const std::filesystem::path &dest) 
 {
-    if (m_config->dry_run)
+    if (m_config->backup.dry_run)
     {
         return;
     }

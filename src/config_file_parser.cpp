@@ -39,7 +39,7 @@ std::shared_ptr<Config> ConfigFileParser::to_config()
 {
     auto config = std::make_shared<Config>();
     config->root_path = m_root;
-    config->destination = m_destination;
+    config->backup.destination = m_destination;
     config->exclusion_paths = m_exclude_paths;
     config->exclusion_patterns = m_exclude_patterns;
     config->include_directories = m_include_directories;
@@ -61,7 +61,7 @@ void ConfigFileParser::parse_file(const std::string &path)
     }
     catch (std::exception &err)
     {
-        std::cerr << "Error : " << err.what() << "\nContinue anyway. \n";
+        std::cerr << "Error : " << err.what() << "\nContinue anyway. \n";
         return;
     }
 

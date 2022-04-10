@@ -33,6 +33,8 @@
 #include <string>
 #include <memory>
 
+class BackupCommandLineOptions;
+
 class CommandLineError : public std::exception
 {
 public:
@@ -79,7 +81,7 @@ public:
 
 private:
     std::filesystem::path resolve_path(const std::string &path) const;
-    void backup_configuration();
+    BackupCommandLineOptions backup_configuration();
     void init_configuration();
     void restore_configuration();
 

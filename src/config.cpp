@@ -32,7 +32,7 @@
 
 std::filesystem::path Config::get_real_destination_directory() const
 {
-    return destination / backup_dir_name;
+    return backup.destination / backup.backup_dir_name;
 }
 
 std::filesystem::path Config::get_destination_directory() const
@@ -77,14 +77,19 @@ bool Config::is_destination_dir_exists(const std::filesystem::path &source) cons
 
 void Config::merge(const std::shared_ptr<IConfig> & src)
 {
-    const auto config = (const std::shared_ptr<Config>&) src;  
+    const auto config = (const std::shared_ptr<Config>&) src;
     
     include_directories = config->include_directories;
     exclusion_paths = config->exclusion_paths;
     exclusion_patterns = config->exclusion_patterns;
-    destination = config->destination;
+    backup = config->backup;
     root_path = config->root_path;
-    backup_dir_name = config->backup_dir_name;
-    strategy = config->strategy;
+
     action = config->action;
+}
+
+void Config::set_backup_configuration(BackupCommandLineOptions config)
+{
+    backup = std::move(config);
+    action = CommandLineType::Backup;
 }

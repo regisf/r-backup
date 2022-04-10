@@ -50,9 +50,9 @@ namespace action {
             std::cout << "Nothing to backup\n";
         }
 
-        const auto destination = m_config->destination;
+        const auto destination = m_config->backup.destination;
         for (const auto &path : pathes) {
-            if (m_config->verbose) {
+            if (m_config->backup.verbose) {
                 std::cout << "Copying " << path.string() << " to " << (destination / path.filename()).string() << "\n";
             }
 
@@ -61,16 +61,16 @@ namespace action {
     }
 
     bool Backup::can_backup() {
-        if (m_config->dry_run) {
+        if (m_config->backup.dry_run) {
             return true;
         }
 
         bool status = true;
 
-        if (!std::filesystem::exists(m_config->destination)) {
+        if (!std::filesystem::exists(m_config->backup.destination)) {
             std::stringstream ss;
             ss << "Unable to find the destination directory:"
-               << m_config->destination;
+               << m_config->backup.destination;
 
             status = false;
             m_error_msg = ss.str();

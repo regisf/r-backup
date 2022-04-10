@@ -25,7 +25,7 @@ TEST(TestBackupCommandLine, test_long_help_argument_should_exit)
 {
     auto cmdLine = BackupCommandLine({"backup", "--help"});
 
-    cmdLine.parse(mock::exit);
+    (void)cmdLine.parse(mock::exit);
 
     ASSERT_TRUE(mock::exit_called);
     mock::exit_called = false;
@@ -56,9 +56,9 @@ TEST(TestBackupCommandLine, test_strategy_with_value)
 {
     auto cmdLine = BackupCommandLine({"backup", "--strategy", "keep_all"});
 
-    cmdLine.parse();
+    auto options  = std::move(cmdLine.parse());
 
-    ASSERT_EQ(cmdLine.get_strategy(), std::string{"keep_all"});
+    ASSERT_EQ(options.strategy, std::string{"keep_all"});
 }
 
 TEST(TestBackupCommandLine, test_nth_without_value_should_fail)
@@ -82,31 +82,31 @@ TEST(TestBackupCommandLine, test_nth_with_value)
     int expected_nth_int;
     auto cmdLine = BackupCommandLine({"backup", "--nth", expected_nth});
 
-    cmdLine.parse();
+    auto options = std::move(cmdLine.parse());
 
     std::stringstream ss;
     ss << expected_nth;
     ss >> expected_nth_int;
 
-    ASSERT_EQ(cmdLine.get_nth(), expected_nth_int);
+    ASSERT_EQ(options.nth, expected_nth_int);
 }
 
 TEST(TestBackupCommandLine, test_dry_run_with_value)
 {
     auto cmdLine = BackupCommandLine({"backup", "--dry-run"});
 
-    cmdLine.parse();
+    auto options = std::move(cmdLine.parse());
 
-    ASSERT_TRUE(cmdLine.get_dry_run());
+    ASSERT_TRUE(options.dry_run);
 }
 
 TEST(TestBackupCommandLine, test_dry_run_default_value_is_false)
 {
     auto cmdLine = BackupCommandLine({"backup"});
 
-    cmdLine.parse();
+    auto options = std::move(cmdLine.parse());
 
-    ASSERT_FALSE(cmdLine.get_dry_run());
+    ASSERT_FALSE(options.dry_run);
 }
 
 TEST(TestBackupCommandLine, test_config_file_with_value_should_load_file)
@@ -114,9 +114,9 @@ TEST(TestBackupCommandLine, test_config_file_with_value_should_load_file)
     auto expected_file_name = "aConfigFile";
     auto cmdLine = BackupCommandLine({"backup", "--config-file", expected_file_name});
 
-    cmdLine.parse();
+    auto options = std::move(cmdLine.parse());
 
-    ASSERT_EQ(expected_file_name, cmdLine.get_config_file());
+    ASSERT_EQ(expected_file_name, options.config_file);
  }
 
 TEST(TestBackupCommandLine, test_config_file_without_value_should_fail)
@@ -139,17 +139,17 @@ TEST(TestBackupCommandLine, test_destination_with_value)
     auto expected_destination = "a-destination-directory";
     auto cmdLine = BackupCommandLine({"backup", "--destination", expected_destination});
 
-    cmdLine.parse();
+    auto options = std::move(cmdLine.parse());
 
-    ASSERT_EQ(expected_destination, cmdLine.get_destination());
+    ASSERT_EQ(expected_destination, options.destination);
 }
 
 TEST(TestBackupCommandLine, test_backup_dir_name_with_value)
 {
     auto expected_name = "backupname";
-    auto cmd_line= BackupCommandLine({"backup", "--backup-directory-name", expected_name});
-    cmd_line.parse();
-    ASSERT_EQ(expected_name, cmd_line.get_backup_directory_name());
+    auto cmdLine= BackupCommandLine({"backup", "--backup-directory-name", expected_name});
+    auto options = std::move(cmdLine.parse());
+    ASSERT_EQ(expected_name, options.backup_dir_name);
 }
 
 TEST(TestBackupCommandLine, test_backup_dir_name_without_value_should_fail)
@@ -171,16 +171,16 @@ TEST(TestBackupCommandLine, test_verbose_argument)
 {
     auto cmdLine = BackupCommandLine({"backup", "--verbose"});
 
-    cmdLine.parse();
+    auto options = std::move(cmdLine.parse());
 
-    ASSERT_TRUE(cmdLine.get_verbose());
+    ASSERT_TRUE(options.verbose);
 }
 
 TEST(TestBackupCommandLine, test_verbose_is_false_by_default)
 {
     auto cmdLine = BackupCommandLine({"backup"});
 
-    cmdLine.parse();
+    auto options = std::move(cmdLine.parse());
 
-    ASSERT_FALSE(cmdLine.get_verbose());
+    ASSERT_FALSE(options.verbose);
 }

@@ -30,11 +30,14 @@
 #include "values/strategy.hpp"
 #include "values/destination.hpp"
 #include "values/configuration.hpp"
+#include "command_line/backup_command_line.hpp"
 
 #include <string>
 #include <vector>
 #include <filesystem>
 #include <regex>
+#include <memory>
+
 
 enum class CommandLineType
 {
@@ -56,13 +59,14 @@ public:
     virtual std::filesystem::path get_destination_directory(const std::filesystem::path &path) const = 0;
     virtual bool is_destination_dir_exists(const std::filesystem::path &source) const = 0;
     virtual void merge(const std::shared_ptr<IConfig> & config) = 0;
+    virtual void set_backup_configuration(BackupCommandLineOptions configuration) = 0;
 };
 
 
 /**
  * @brief Configuration container
  */
-struct Config : IConfig
+struct Config : private IConfig
 {
     enum class Strategy
     {
@@ -73,19 +77,13 @@ struct Config : IConfig
         Difference
     };
 
+    CommandLineType action{CommandLineType::Unknown};
+    BackupCommandLineOptions backup;
+
     std::vector<std::string> include_directories;
     std::vector<std::regex> exclusion_patterns;
     std::vector<std::string> exclusion_paths;
-
-    bool verbose{false};
-    bool dry_run{false};
-
-    std::filesystem::path destination;
     std::filesystem::path root_path;
-    std::string backup_dir_name{};
-
-    Strategy strategy{Strategy::NotSet};
-    CommandLineType action{CommandLineType::Unknown};
 
     /**
      * @brief Get the destination directory
@@ -132,6 +130,13 @@ struct Config : IConfig
      * @param config The configuration source to merge with this object
      */
     void merge(const std::shared_ptr<IConfig> & src) override;
+
+    /**
+     * @brief extract_from_root_path
+     * @param config The configuration object
+     * @return
+     */
+    void set_backup_configuration(BackupCommandLineOptions config) override;
 
 private:
     /**
