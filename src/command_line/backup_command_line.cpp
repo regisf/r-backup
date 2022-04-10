@@ -11,14 +11,17 @@ The options given override the default configuration file.
 Options are:
     --config-file: set the config file that contains
     --destination: Set the destionation
-    --name: Set the destination name.
+    --backup-directory-name: Set the destination name.
+                             Will be [Destination Dir]/[Backup Directory Name]/[DateForBackup]
+                             Default is : backup
     --strategy: The default backup strategy.
         Strategies are
             keep-all: Keep all backups. You remove old ones manually
             keep-nth: Keep only nth last backup. Implies --nth argument
             remove-previous:  Keep only one backup.
-            difference: Backup only the last
-    --nth: The number of backup to keep (implies --strategy keep_nth)
+            difference: Backup only the last modified file
+    --nth: The number of backup to keep (implies --strategy keep_nth, exclude all other strategies)
+           Older backups will be destroyed.
 
 )";
 
