@@ -65,7 +65,6 @@ std::shared_ptr<Config> CommandLine::parse()
         break;
 
     case CommandLineType::Backup:
-        //BackupCommandLine(get_args());
         backup_configuration();
         break;
 
