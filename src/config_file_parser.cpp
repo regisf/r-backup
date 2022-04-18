@@ -192,22 +192,21 @@ std::vector<std::string> ConfigFileParser::get_paths_to_explore()
     return paths;
 }
 
-std::shared_ptr<ConfigFileParser> ConfigFileParser::read_default_config_file()
-{
-    const std::string home_path{std::getenv("HOME")};
-    std::filesystem::path config_file = std::filesystem::path(home_path) / ".config" / "r-backup" / "config.yml";
-
-    return ConfigFileParser::read_default_config_file(config_file.string());
-}
-
 std::shared_ptr<ConfigFileParser> ConfigFileParser::read_default_config_file(const std::string & file_path)
 {
     auto parser = std::make_shared<ConfigFileParser>();
- 
-    std::filesystem::path p {file_path};
-    if (std::filesystem::exists(p))
+    std::filesystem::path config_file_path;
+
+    if (file_path.empty()) {
+        const std::string home_path{std::getenv("HOME")};
+        config_file_path = std::filesystem::path(home_path) / ".config" / "r-backup" / "config.yml";
+    } else {
+        config_file_path = file_path;
+    }
+
+    if (std::filesystem::exists(config_file_path))
     {
-        parser->parse_file(p);
+        parser->parse_file(config_file_path);
     }
 
     return parser;

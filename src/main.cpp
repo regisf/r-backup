@@ -160,13 +160,7 @@ int main(int argc, char **argv)
         CommandLine cmdLine(argc, argv);
         auto config = cmdLine.parse();
 
-        std::shared_ptr<ConfigFileParser> config_parser;
-
-        if (! config->backup.config_file.empty()) {
-            config_parser = ConfigFileParser::read_default_config_file(config->backup.config_file);
-        } else {
-            config_parser = ConfigFileParser::read_default_config_file();
-        }
+        auto config_parser = ConfigFileParser::read_default_config_file(config->backup.config_file);
 
         std::shared_ptr<Config> file_config = config_parser->to_config();
 

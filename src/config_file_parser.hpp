@@ -56,20 +56,12 @@ public:
     std::shared_ptr<Config> to_config() override;
 
     /**
-     * @brief Read the cofniguration file from $HOME/.config directory
-     *        if the file exists, parse it
-     * 
-     * @returns The instanciated object
-     */
-    static std::shared_ptr<ConfigFileParser> read_default_config_file();
-
-    /**
      * @brief Read the configuration file as given. If the file exists, the method parse it
      * 
      * @param file_path The config file to read and parser
      * @return A configuration object
      */
-    static std::shared_ptr<ConfigFileParser> read_default_config_file(const std::string & file_path);
+    static std::shared_ptr<ConfigFileParser> read_default_config_file(const std::string & file_path = "");
 
     /**
      * @brief Parse the configuration file. If there's a YAML syntax error, exit with status == 1
