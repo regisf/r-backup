@@ -9,10 +9,9 @@
 
 namespace date
 {
-    std::string get_now()
+    std::string get_now(now_callback now)
     {
-        const auto now = std::chrono::system_clock::now();
-        auto in_time_t = std::chrono::system_clock::to_time_t(now);
+        auto in_time_t = std::chrono::system_clock::to_time_t(now());
         std::stringstream ss;
 
         ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d");
@@ -28,12 +27,12 @@ namespace date
             return -1;
         }
 
-
-        std::tm tm;
-        tm.tm_year = std::stoi(match[1]);
-        tm.tm_mon = std::stoi(match[2]);
+        struct tm tm;
+        memset(&tm, 0, sizeof(struct tm));
+        tm.tm_year = std::stoi(match[1]) - 1900;
+        tm.tm_mon = std::stoi(match[2]) - 1;
         tm.tm_mday = std::stoi(match[3]);
 
-        return std::mktime(&tm);
+        return mktime(&tm);
     }
 }
