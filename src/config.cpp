@@ -83,6 +83,8 @@ void Config::set_backup_configuration(BackupCommandLineOptions config)
 
 void Config::merge(const std::shared_ptr<Config> & src)
 {
+    action = src->action;
+
     if (src->backup.dry_run != backup.dry_run) {
         backup.dry_run = src->backup.dry_run;
     }
@@ -103,7 +105,7 @@ void Config::merge(const std::shared_ptr<Config> & src)
         backup.config_file = src->backup.config_file;
     }
 
-    if (src->backup.destination != backup.destination) {
+    if (!src->backup.destination.empty() && src->backup.destination != backup.destination) {
         backup.destination = src->backup.destination;
     }
 

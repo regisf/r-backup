@@ -39,6 +39,7 @@ PathExplorer::PathExplorer(std::shared_ptr<Config> config)
 std::vector<std::filesystem::path> PathExplorer::explore()
 {
     auto directories = m_config->include_directories;
+
     // auto last_backup_date = guess_last_backup();
 
     // No included directory so use backup root directory

@@ -45,7 +45,6 @@ std::shared_ptr<Config> ConfigFileParser::to_config()
     config->include_directories = m_include_directories;
 
     return config;
-
 }
 
 void ConfigFileParser::parse_file(const std::string &path)
@@ -92,6 +91,7 @@ void ConfigFileParser::extract_destination_path()
 void ConfigFileParser::extract_root_path()
 {
     const auto root = m_config["root"];
+
     if (root.IsDefined())
     {
         m_root = root.as<std::string>();
@@ -175,29 +175,25 @@ std::vector<std::string> ConfigFileParser::get_paths_to_explore()
 {
     std::vector<std::string> paths;
 
-    if (m_include_directories.size())
-    {
+    if (m_include_directories.size()) {
         const auto sep = m_root.ends_with("/") ? "" : "/";
 
         std::for_each(m_include_directories.begin(), m_include_directories.end(), [&](const auto &p) {
             paths.push_back(m_root + sep + p);
         });
-    }
-
-    else
-    {
+    } else {
         paths.push_back(m_root);
     }
 
     return paths;
 }
 
-std::shared_ptr<ConfigFileParser> ConfigFileParser::read_default_config_file(const std::string & file_path)
+std::shared_ptr<Config> ConfigFileParser::read_default_config_file(const std::string & file_path)
 {
     auto parser = std::make_shared<ConfigFileParser>();
     std::filesystem::path config_file_path;
 
-    if (file_path.empty()) {
+    if (file_path.empty())  {
         const std::string home_path{std::getenv("HOME")};
         config_file_path = std::filesystem::path(home_path) / ".config" / "r-backup" / "config.yml";
     } else {
@@ -209,5 +205,5 @@ std::shared_ptr<ConfigFileParser> ConfigFileParser::read_default_config_file(con
         parser->parse_file(config_file_path);
     }
 
-    return parser;
+    return parser->to_config();
 }

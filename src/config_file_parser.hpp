@@ -61,7 +61,7 @@ public:
      * @param file_path The config file to read and parser
      * @return A configuration object
      */
-    static std::shared_ptr<ConfigFileParser> read_default_config_file(const std::string & file_path = "");
+    static std::shared_ptr<Config> read_default_config_file(const std::string & file_path = "");
 
     /**
      * @brief Parse the configuration file. If there's a YAML syntax error, exit with status == 1

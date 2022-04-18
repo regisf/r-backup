@@ -87,6 +87,7 @@ static StatusCode do_backup(const std::shared_ptr<Config> &config)
     StatusCode ret_val{StatusCode::DefaultStatusCode};
 
     FileCopy filecopy{config};
+
     if (action::Backup bk_act(config, filecopy); bk_act.can_backup())
     {
         std::vector<std::filesystem::path> pathes;
@@ -160,13 +161,10 @@ int main(int argc, char **argv)
         CommandLine cmdLine(argc, argv);
         auto config = cmdLine.parse();
 
-        auto config_parser = ConfigFileParser::read_default_config_file(config->backup.config_file);
+        auto config_from_file = ConfigFileParser::read_default_config_file(config->backup.config_file);
+        config_from_file->merge(config);
 
-        std::shared_ptr<Config> file_config = config_parser->to_config();
-
-        config->merge(file_config);
-
-        ret_val = process_action(config);
+        ret_val = process_action(config_from_file);
     }
     catch (const CommandLineError &err)
     {
