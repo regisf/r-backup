@@ -37,6 +37,7 @@
 #include "action/initializer.hpp"
 #include "action/path_explorer.hpp"
 #include "command_line/command_line.hpp"
+#include "config_file_parser.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -86,7 +87,6 @@ static StatusCode do_backup(const std::shared_ptr<Config> &config)
     StatusCode ret_val{StatusCode::DefaultStatusCode};
 
     FileCopy filecopy{config};
-
     if (action::Backup bk_act(config, filecopy); bk_act.can_backup())
     {
         std::vector<std::filesystem::path> pathes;
@@ -120,7 +120,7 @@ static StatusCode do_backup(const std::shared_ptr<Config> &config)
 static StatusCode process_action(const std::shared_ptr<Config> &config)
 {
     auto ret_val = StatusCode::SuccessStatusCode;
-    
+
     switch (config->action)
     {
     case CommandLineType::Help:
@@ -159,6 +159,19 @@ int main(int argc, char **argv)
     {
         CommandLine cmdLine(argc, argv);
         auto config = cmdLine.parse();
+
+        std::shared_ptr<ConfigFileParser> config_parser;
+
+        if (! config->backup.config_file.empty()) {
+            config_parser = ConfigFileParser::read_default_config_file(config->backup.config_file);
+        } else {
+            config_parser = ConfigFileParser::read_default_config_file();
+        }
+
+        std::shared_ptr<Config> file_config = config_parser->to_config();
+
+        config->merge(file_config);
+
         ret_val = process_action(config);
     }
     catch (const CommandLineError &err)

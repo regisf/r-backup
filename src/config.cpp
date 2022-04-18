@@ -80,3 +80,34 @@ void Config::set_backup_configuration(BackupCommandLineOptions config)
     backup = std::move(config);
     action = CommandLineType::Backup;
 }
+
+void Config::merge(const std::shared_ptr<Config> & src)
+{
+    if (src->backup.dry_run != backup.dry_run) {
+        backup.dry_run = src->backup.dry_run;
+    }
+
+    if (src->backup.strategy != backup.strategy) {
+        backup.strategy = src->backup.strategy;
+    }
+
+    if (src->backup.nth != backup.nth) {
+        backup.nth = src->backup.nth;
+    }
+
+    if (src->backup.verbose != backup.verbose) {
+        backup.verbose = src->backup.verbose;
+    }
+
+    if (src->backup.config_file != backup.config_file) {
+        backup.config_file = src->backup.config_file;
+    }
+
+    if (src->backup.destination != backup.destination) {
+        backup.destination = src->backup.destination;
+    }
+
+    if (src->backup.backup_dir_name != backup.backup_dir_name) {
+        backup.backup_dir_name = src->backup.backup_dir_name;
+    }
+}

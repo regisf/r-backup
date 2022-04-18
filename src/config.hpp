@@ -130,6 +130,12 @@ struct Config : public IConfig
      */
     void set_backup_configuration(BackupCommandLineOptions config) override;
 
+    /**
+     * @brief merge two Config object. The Config given override this.
+     * @param src The object to merge with this one.
+     */
+    void merge(const std::shared_ptr<Config> & src);
+
 private:
     /**
      * @brief Extract path without the root path
@@ -139,6 +145,5 @@ private:
      */
     std::filesystem::path extract_from_root_path(const std::filesystem::path &path) const;
 };
-
 
 #endif

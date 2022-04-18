@@ -33,7 +33,7 @@
 
 #include <yaml-cpp/yaml.h>
 
-static const std::string SystemSeparator{"/"};
+#define SystemSeparator std::string{"/"}
 
 std::shared_ptr<Config> ConfigFileParser::to_config() 
 {

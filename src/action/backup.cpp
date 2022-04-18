@@ -39,8 +39,8 @@
 
 
 namespace action {
-    Backup::Backup(std::shared_ptr<Config> config, FileCopy copy)
-            : m_config(std::move(config)), m_file_copy(std::move(copy)) {
+    Backup::Backup(const std::shared_ptr<Config> &config, FileCopy copy)
+            : m_config(config), m_file_copy(std::move(copy)) {
     }
 
     void Backup::backup(const std::vector<std::filesystem::path> &pathes) {
