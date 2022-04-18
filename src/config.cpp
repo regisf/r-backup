@@ -75,19 +75,6 @@ bool Config::is_destination_dir_exists(const std::filesystem::path &source) cons
     return std::filesystem::exists(dest_parent) && std::filesystem::is_directory(dest_parent);
 }
 
-void Config::merge(const std::shared_ptr<IConfig> & src)
-{
-    const auto config = (const std::shared_ptr<Config>&) src;
-    
-    include_directories = config->include_directories;
-    exclusion_paths = config->exclusion_paths;
-    exclusion_patterns = config->exclusion_patterns;
-    backup = config->backup;
-    root_path = config->root_path;
-
-    action = config->action;
-}
-
 void Config::set_backup_configuration(BackupCommandLineOptions config)
 {
     backup = std::move(config);

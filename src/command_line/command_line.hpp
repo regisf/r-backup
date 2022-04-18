@@ -57,7 +57,7 @@ public:
     virtual std::vector<std::string> get_args() noexcept = 0;
 };
 
-class CommandLine : private ICommandLine
+class CommandLine : public ICommandLine
 {
 public:
     /**
@@ -71,13 +71,13 @@ public:
      * @brief Parses the command line, and returns the configuration
      * @return the configuration object
      */
-    std::shared_ptr<Config> parse();
+    std::shared_ptr<Config> parse() override;
 
     /**
      * @brief Get the currated list of argument
      * @return The command line argument
      */
-    std::vector<std::string> get_args() noexcept;
+    std::vector<std::string> get_args() noexcept override;
 
 private:
     std::filesystem::path resolve_path(const std::string &path) const;

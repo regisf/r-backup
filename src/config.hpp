@@ -58,7 +58,6 @@ public:
     virtual bool is_backup_exists() const = 0;
     virtual std::filesystem::path get_destination_directory(const std::filesystem::path &path) const = 0;
     virtual bool is_destination_dir_exists(const std::filesystem::path &source) const = 0;
-    virtual void merge(const std::shared_ptr<IConfig> & config) = 0;
     virtual void set_backup_configuration(BackupCommandLineOptions configuration) = 0;
 };
 
@@ -66,7 +65,7 @@ public:
 /**
  * @brief Configuration container
  */
-struct Config : private IConfig
+struct Config : public IConfig
 {
     enum class Strategy
     {
@@ -125,13 +124,6 @@ struct Config : private IConfig
     std::filesystem::path get_real_destination_directory() const override;
 
     /**
-     * @brief Merge a configuration with this one
-     * 
-     * @param config The configuration source to merge with this object
-     */
-    void merge(const std::shared_ptr<IConfig> & src) override;
-
-    /**
      * @brief extract_from_root_path
      * @param config The configuration object
      * @return
@@ -147,5 +139,6 @@ private:
      */
     std::filesystem::path extract_from_root_path(const std::filesystem::path &path) const;
 };
+
 
 #endif

@@ -22,7 +22,7 @@ namespace date
     {
         std::regex regex{"(\\d{4})-(\\d{2})-(\\d{2})"};
         std::smatch match;
-        if (!std::regex_match(date, match, regex)) 
+        if (!std::regex_match(date, match, regex))
         {
             return -1;
         }

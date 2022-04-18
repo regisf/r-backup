@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 
-const std::string USAGE = R"(
+static const std::string USAGE = R"(
 r-backup backup [OPTIONS]
 
 The options given override the default configuration file.

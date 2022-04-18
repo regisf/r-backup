@@ -4,12 +4,12 @@
 #include <chrono>
 #include <ctime>
 
-static const int Year{2022};
-static const int Month{04};
-static const int Day{17};
-static const std::string Today{"2022-04-17"};
 
 namespace mock {
+    const int Year{2022};
+    const int Month{04};
+    const int Day{17};
+
     std::time_t make_time(int year = Year, int month = Month, int day = Day) {
         struct tm time;
         memset(&time, 0, sizeof(struct tm));
@@ -43,6 +43,7 @@ TEST(TestDate, test_date_to_time_t)
 {
     // Arrange
     time_t expected_time = mock::make_time();
+    std::string Today{"2022-04-17"};
 
     // Act
     time_t result = date::to_time_t(Today);
@@ -56,7 +57,6 @@ TEST(TestDate, test_to_time_t_with_inconsitant_date)
     // Arrange
     time_t expected_time = -1;
 
-    // Act
     std::vector<std::string> times = {
         "23-11-12",     // Not the right size for years
         "2022.12-12",   // not the good separator
@@ -65,6 +65,7 @@ TEST(TestDate, test_to_time_t_with_inconsitant_date)
     };
 
     for (const auto &time : times) {
+        // Act
         time_t result = date::to_time_t(time);
 
         // Assert

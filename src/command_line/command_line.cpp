@@ -37,7 +37,6 @@
 
 static const size_t First = 0;
 
-
 CommandLine::CommandLine(int argc, char **argv)
 {
 
@@ -51,12 +50,11 @@ CommandLine::CommandLine(int argc, char **argv)
         args.emplace_back(std::string(argv[i]));
     }
 
-    //m_config = ConfigFileParser::read_default_config_file()->to_config();
 }
 
 std::shared_ptr<Config> CommandLine::parse()
 {    
-    auto config = std::make_shared<Config>();
+    std::shared_ptr<Config> config = std::make_shared<Config>();
     auto action = CommandLineAction::from_string(args.at(First));
 
     switch (action)
