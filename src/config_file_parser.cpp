@@ -188,6 +188,7 @@ std::vector<std::string> ConfigFileParser::get_paths_to_explore()
     return paths;
 }
 
+
 std::shared_ptr<Config> ConfigFileParser::read_default_config_file(const std::string & file_path)
 {
     auto parser = std::make_shared<ConfigFileParser>();

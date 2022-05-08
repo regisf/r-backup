@@ -1,19 +1,12 @@
-// #include "../../src/action/backup.hpp"
+#include "../../src/action/backup.hpp"
 
-// #include <gtest/gtest.h>
+#include <gtest/gtest.h>
 
 
-// TEST(test_backup, test_backup_factory_copy_is_called)
-// {
-//     FAIL();
-// }
+TEST(TestBackup, test_backup_start)
+{
+    auto config = nullptr;
+    auto fileCopy = FileCopy();
 
-// TEST(test_backup, test_backup_backup_copy_isnt_called)
-// {
-//     FAIL();
-// }
-
-// TEST(test_backup, test_backup_shoud_create_directory_if_not_exists)
-// {
-//     FAIL();
-// }
+    // action::Backup::start(config, fileCopy);
+}

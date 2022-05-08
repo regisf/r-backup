@@ -40,7 +40,32 @@
 
 namespace action {
     Backup::Backup(const std::shared_ptr<Config> &config, FileCopy copy)
-            : m_config(config), m_file_copy(std::move(copy)) {
+            : m_config(config)
+            , m_file_copy(std::move(copy))
+    {}
+
+    void Backup::start(const std::shared_ptr<Config>& config, FileCopy filecopy)
+    {
+        if (action::Backup bk_act(config, filecopy); bk_act.can_backup())
+        {
+            std::vector<std::filesystem::path> pathes;
+
+            if (!config->is_backup_exists())
+            {
+                // spdlog::info("Exploring directory {}",config->root_path);
+                std::cout << "Exploring directory " << config->root_path << "\n";
+                PathExplorer explorer(config);
+                pathes = explorer.explore();
+                std::cout << "Got " << pathes.size() << " files found\n";
+                // spdlog::info("Got {} files found", pathes.size());
+            }
+            else
+            {
+                std::cout << "There's nothing to backup because it is already backuped.\n";
+            }
+
+            bk_act.backup(pathes);
+        }
     }
 
     void Backup::backup(const std::vector<std::filesystem::path> &pathes) {

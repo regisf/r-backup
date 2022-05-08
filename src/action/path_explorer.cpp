@@ -36,6 +36,11 @@
 PathExplorer::PathExplorer(std::shared_ptr<Config> config)
     : m_config(config) {}
 
+void PathExplorer::set_config(std::shared_ptr<Config> config)
+{
+    m_config = config;
+}
+
 std::vector<std::filesystem::path> PathExplorer::explore()
 {
     auto directories = m_config->include_directories;
@@ -53,39 +58,35 @@ std::vector<std::filesystem::path> PathExplorer::explore()
     return m_pathes;
 }
 
-const bool PathExplorer::should_be_skipped(const std::filesystem::path &p) const
+bool PathExplorer::is_pattern_match(const std::filesystem::path &  p) const
 {
-    if (std::filesystem::is_symlink(p))
-    {
-        return true;
-    }
-
-    bool is_excluded = false;
-    auto &patterns = m_config->exclusion_paths;
-
-    for (const auto &pattern : patterns)
+    for (const auto &pattern : m_config->exclusion_patterns)
     {
         if (std::regex_search(p.string(), std::regex{pattern}))
         {
-            is_excluded = true;
-            break;
+            return true;
         }
     }
 
-    if (!is_excluded)
+    return false;
+}
+
+bool PathExplorer::is_in_exclusion_path(const std::filesystem::path & p) const
+{
+    for (const auto &path : m_config->exclusion_paths)
     {
-        auto &pathes = m_config->exclusion_paths;
-        for (const auto &path : pathes)
+        if (p.string().starts_with(path))
         {
-            if (p.string().starts_with(path))
-            {
-                is_excluded = true;
-                break;
-            }
+            return true;
         }
     }
+    return false;
+}
 
-    return is_excluded;
+bool PathExplorer::should_be_skipped(const std::filesystem::path &p,
+                                     IsSymlinkFunc is_symlink) const
+{
+    return is_symlink(p) || is_pattern_match(p) || is_in_exclusion_path(p);
 }
 
 void PathExplorer::explore_directory(const std::filesystem::path &dir_path)

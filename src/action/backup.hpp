@@ -39,6 +39,20 @@ struct Config;
 
 namespace action
 {
+    class BackupError: public std::exception
+    {
+    public:
+        BackupError(const std::string & msg) : message(msg) {}
+
+        const char * what() const noexcept override
+        {
+            return message.c_str();
+        }
+
+    private:
+        std::string message;
+    };
+
     class Backup
     {
     public:
@@ -47,6 +61,10 @@ namespace action
         [[nodiscard]] bool can_backup();
         [[nodiscard]] std::string error_message() const;
 
+        /**
+         * Create backup object and start to backup
+         */
+        static void start(const std::shared_ptr<Config> & config, FileCopy copy);
 
     private:
         std::shared_ptr<Config> m_config;

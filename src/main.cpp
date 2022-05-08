@@ -83,34 +83,18 @@ Options:
  * The return code is 2
  */
 static StatusCode do_backup(const std::shared_ptr<Config> &config)
-{
+{    
     StatusCode ret_val{StatusCode::DefaultStatusCode};
-
     FileCopy filecopy{config};
 
-    if (action::Backup bk_act(config, filecopy); bk_act.can_backup())
+    try
     {
-        std::vector<std::filesystem::path> pathes;
-
-        if (!config->is_backup_exists())
-        {
-            // spdlog::info("Exploring directory {}",config->root_path);
-            std::cout << "Exploring directory " << config->root_path << "\n";
-            PathExplorer explorer(config);
-            pathes = explorer.explore();
-            std::cout << "Got " << pathes.size() << " files found\n";
-            // spdlog::info("Got {} files found", pathes.size());
-        }
-        else
-        {
-            std::cout << "There's nothing to backup because it is already backuped.\n";
-        }
-
-        bk_act.backup(pathes);
+        action::Backup::start(config, filecopy);
     }
-    else
+
+    catch (const action::BackupError & error)
     {
-        std::cerr << "Error: Unable to backup because: " << bk_act.error_message()
+        std::cerr << "Error: Unable to backup because: " << error.what()
                   << std::endl;
         ret_val = StatusCode::BackupActionStatus;
     }
