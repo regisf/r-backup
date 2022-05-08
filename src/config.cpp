@@ -28,6 +28,7 @@
 #include "date.hpp"
 
 #include <filesystem>
+#include <algorithm>
 #include <iostream>
 
 std::filesystem::path Config::get_real_destination_directory() const
@@ -112,4 +113,16 @@ void Config::merge(const std::shared_ptr<Config> & src)
     if (src->backup.backup_dir_name != backup.backup_dir_name) {
         backup.backup_dir_name = src->backup.backup_dir_name;
     }
+
+    if (!src->exclusion_paths.empty()) {
+        std::copy_if(src->exclusion_paths.begin(), src->exclusion_paths.end(),
+                     std::back_inserter(exclusion_paths),
+                     [&](const std::string & p) {
+            return std::find(exclusion_paths.begin(),
+                             exclusion_paths.end(), p) != std::end(exclusion_paths);
+        });
+    }
+//    if (!src->exclusion_patterns.empty()) ;
+//    if (!src->include_directories.empty()) ;
+//    if (src->root_path.empty()) ;
 }

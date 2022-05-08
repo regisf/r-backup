@@ -37,6 +37,7 @@
 #include <filesystem>
 #include <regex>
 #include <memory>
+#include <iostream>
 
 
 enum class CommandLineType

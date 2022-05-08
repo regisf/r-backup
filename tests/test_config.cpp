@@ -28,6 +28,7 @@ TEST(TestConfig, test_merge_backup)
     std::filesystem::path expected_backup_destination{"/home/destination"};
     std::filesystem::path expected_backup_dir_name{"/where/is/my/mind"};
     CommandLineType expected_action{CommandLineType::Backup};
+    std::vector<std::string> expected_exclusion_paths{"hello"};
 
     source->action = expected_action;
     source->backup.verbose = true;
@@ -49,5 +50,6 @@ TEST(TestConfig, test_merge_backup)
     ASSERT_EQ(config->backup.config_file, expected_backup_config_file);
     ASSERT_EQ(config->backup.destination, expected_backup_destination);
     ASSERT_EQ(config->backup.backup_dir_name, expected_backup_dir_name);
+    ASSERT_EQ(config->exclusion_paths, expected_exclusion_paths);
 }
 
