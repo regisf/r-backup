@@ -60,9 +60,11 @@ std::vector<std::filesystem::path> PathExplorer::explore()
 
 bool PathExplorer::is_pattern_match(const std::filesystem::path &  p) const
 {
+    const auto pstr = p.string();
+
     for (const auto &pattern : m_config->exclusion_patterns)
     {
-        if (std::regex_search(p.string(), std::regex{pattern}))
+        if (std::regex_search(pstr, std::regex{pattern}))
         {
             return true;
         }
@@ -73,13 +75,15 @@ bool PathExplorer::is_pattern_match(const std::filesystem::path &  p) const
 
 bool PathExplorer::is_in_exclusion_path(const std::filesystem::path & p) const
 {
+    const auto pstr = p.string();
     for (const auto &path : m_config->exclusion_paths)
     {
-        if (p.string().starts_with(path))
+        if (pstr.starts_with(path))
         {
             return true;
         }
     }
+
     return false;
 }
 
