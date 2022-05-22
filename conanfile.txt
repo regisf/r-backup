@@ -1,7 +1,0 @@
-[requires]
-lyra/1.5.1
-fakeit/2.0.8
-
-[generators]
-cmake
-

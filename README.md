@@ -4,22 +4,28 @@ This is a work in progress. Here for backup reason.
 
 However, it works an it is partially functional. 
 
-## Build
+## Warning
 
-Install and configure [conan](https://conan.io/)
+This project is written with C++ 20
+
+## Dependencies 
+
+* yaml-cpp
+
+## Build
 
 Create a build directory
 ```shell
   $ mkdir build && cd build
 ``` 
 
-Then launch conan package manager. The argument `--build=missing` will build libraries if the binary is missing
+Then build the projet makefiles
 
 ```shell
-  $ conan install .. --build=missing
-``` 
+  $ cmake ..
+```
 
-Build the project
+And build the project
 
 ```shell
   $ cmake --build . -j 
@@ -27,7 +33,8 @@ Build the project
 
 ## Launch
 
-Create a configuration file into `mkdir ${HOME}/.config/r-backup/ && touch ${HOME}/.config/r-backup/config.yml`. There's a lot of commentary to understand different behaviours.
+Create a configuration file into `mkdir ${HOME}/.config/r-backup/ && touch ${HOME}/.config/r-backup/config.yml`. There's a lot of commentaries into
+the example configuration file to understand different behavioursi.
 
 Then 
 
