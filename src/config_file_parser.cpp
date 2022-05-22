@@ -133,7 +133,7 @@ void ConfigFileParser::extract_excluded_paths(const YAML::Node &excluded)
     {
         for (const auto &path : pathes)
         {
-            m_exclude_paths.push_back(m_root + path.as<std::string>());
+            m_exclude_paths.insert(m_root + path.as<std::string>());
         }
     }
 }
@@ -166,23 +166,23 @@ void ConfigFileParser::extract_inclusions()
     {
         for (const auto &include : included)
         {
-            m_include_directories.push_back(m_root + include.as<std::string>());
+            m_include_directories.insert(m_root + include.as<std::string>());
         }
     }
 }
 
-std::vector<std::string> ConfigFileParser::get_paths_to_explore()
+std::set<std::string> ConfigFileParser::get_paths_to_explore()
 {
-    std::vector<std::string> paths;
+    std::set<std::string> paths;
 
     if (m_include_directories.size()) {
         const auto sep = m_root.ends_with("/") ? "" : "/";
 
         std::for_each(m_include_directories.begin(), m_include_directories.end(), [&](const auto &p) {
-            paths.push_back(m_root + sep + p);
+            paths.insert(m_root + sep + p);
         });
     } else {
-        paths.push_back(m_root);
+        paths.insert(m_root);
     }
 
     return paths;

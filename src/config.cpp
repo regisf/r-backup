@@ -82,47 +82,32 @@ void Config::set_backup_configuration(BackupCommandLineOptions config)
     action = CommandLineType::Backup;
 }
 
+
+template <typename T>
+void merge_if_exists(bool cond, T & source, T & dest) {
+    if (cond) {
+        dest = std::move(source);
+    }
+}
+
+template <typename T>
+void merge_if_exists(T &source, T & dest) {
+    merge_if_exists(source != dest, source, dest);
+}
+
 void Config::merge(const std::shared_ptr<Config> & src)
 {
     action = src->action;
 
-    if (src->backup.dry_run != backup.dry_run) {
-        backup.dry_run = src->backup.dry_run;
-    }
-
-    if (src->backup.strategy != backup.strategy) {
-        backup.strategy = src->backup.strategy;
-    }
-
-    if (src->backup.nth != backup.nth) {
-        backup.nth = src->backup.nth;
-    }
-
-    if (src->backup.verbose != backup.verbose) {
-        backup.verbose = src->backup.verbose;
-    }
-
-    if (src->backup.config_file != backup.config_file) {
-        backup.config_file = src->backup.config_file;
-    }
-
-    if (!src->backup.destination.empty() && src->backup.destination != backup.destination) {
-        backup.destination = src->backup.destination;
-    }
-
-    if (src->backup.backup_dir_name != backup.backup_dir_name) {
-        backup.backup_dir_name = src->backup.backup_dir_name;
-    }
-
-    if (!src->exclusion_paths.empty()) {
-        std::copy_if(src->exclusion_paths.begin(), src->exclusion_paths.end(),
-                     std::back_inserter(exclusion_paths),
-                     [&](const std::string & p) {
-            return std::find(exclusion_paths.begin(),
-                             exclusion_paths.end(), p) != std::end(exclusion_paths);
-        });
-    }
-//    if (!src->exclusion_patterns.empty()) ;
-//    if (!src->include_directories.empty()) ;
-//    if (src->root_path.empty()) ;
+    merge_if_exists(src->backup.dry_run, backup.dry_run);
+    merge_if_exists(src->backup.strategy, backup.strategy);
+    merge_if_exists(src->backup.nth, backup.nth);
+    merge_if_exists(src->backup.verbose, backup.verbose);
+    merge_if_exists(src->backup.config_file, backup.config_file);
+    merge_if_exists(src->backup.destination, backup.destination);
+    merge_if_exists(src->backup.backup_dir_name, backup.backup_dir_name);
+    merge_if_exists(src->exclusion_paths, exclusion_paths);
+    merge_if_exists(!src->exclusion_patterns.empty(), src->exclusion_patterns, exclusion_patterns);
+    merge_if_exists(src->include_directories, include_directories);
+    merge_if_exists(src->root_path, root_path);
 }

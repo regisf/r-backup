@@ -57,7 +57,7 @@ TEST(TestDate, test_to_time_t_with_inconsitant_date)
     // Arrange
     time_t expected_time = -1;
 
-    std::vector<std::string> times = {
+    std::set<std::string> times = {
         "23-11-12",     // Not the right size for years
         "2022.12-12",   // not the good separator
         "2022-1-12",    // Not the right size for month

@@ -53,7 +53,7 @@ TEST(TestPathExplorer, test_exclude_dir_should_be_skipped)
     // Arrange
     std::shared_ptr<Config> config = std::make_shared<Config>();
     std::filesystem::path exclude_path{"toto_titi"};
-    config->exclusion_paths.push_back("toto_titi");
+    config->exclusion_paths.insert("toto_titi");
     config->root_path = "/home/test";
 
     PathExplorer pathExplorer{config};
@@ -70,7 +70,7 @@ TEST(TestPathExplorer, test_exclude_dir_should_not_be_skipped)
     // Arrange
     std::shared_ptr<Config> config = std::make_shared<Config>();
     std::filesystem::path exclude_path{"toto_titi"};
-    config->exclusion_paths.push_back("tata");
+    config->exclusion_paths.insert("tata");
     config->root_path = "/home/test";
 
     PathExplorer pathExplorer{config};
@@ -87,7 +87,7 @@ TEST(TestPathExplorer, test_symlink_returns_true)
     // Arrange
     std::shared_ptr<Config> config = std::make_shared<Config>();
     std::filesystem::path exclude_path{"toto_titi"};
-    config->exclusion_paths.push_back("tata");
+    config->exclusion_paths.insert("tata");
 
     PathExplorer pathExplorer{config};
 
@@ -97,16 +97,14 @@ TEST(TestPathExplorer, test_symlink_returns_true)
 
     // Assert
     ASSERT_TRUE(result);
-
 }
-
 
 TEST(TestPathExplorer, test_symlink_returns_false)
 {
     // Arrange
     std::shared_ptr<Config> config = std::make_shared<Config>();
     std::filesystem::path exclude_path{"toto_titi"};
-    config->exclusion_paths.push_back("tata");
+    config->exclusion_paths.insert("tata");
 
     PathExplorer pathExplorer{config};
 
@@ -116,5 +114,4 @@ TEST(TestPathExplorer, test_symlink_returns_false)
 
     // Assert
     ASSERT_FALSE(result);
-
 }

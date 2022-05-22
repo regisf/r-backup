@@ -57,7 +57,7 @@ namespace action
     {
     public:
         explicit Backup(const std::shared_ptr<Config> & config, FileCopy copy);
-        void backup(const std::vector<std::filesystem::path> &pathes);
+        void backup(const std::set<std::filesystem::path> &pathes);
         [[nodiscard]] bool can_backup();
         [[nodiscard]] std::string error_message() const;
 

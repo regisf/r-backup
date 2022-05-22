@@ -41,7 +41,7 @@ void PathExplorer::set_config(std::shared_ptr<Config> config)
     m_config = config;
 }
 
-std::vector<std::filesystem::path> PathExplorer::explore()
+std::set<std::filesystem::path> PathExplorer::explore()
 {
     auto directories = m_config->include_directories;
 
@@ -50,10 +50,14 @@ std::vector<std::filesystem::path> PathExplorer::explore()
     // No included directory so use backup root directory
     if (!directories.size())
     {
-        directories.push_back(m_config->root_path);
+        directories.insert(m_config->root_path);
     }
 
-    std::for_each(directories.begin(), directories.end(), [&](const auto &path) { explore_directory(path); });
+    std::for_each(directories.begin(),
+                  directories.end(),
+                  [&](const auto &path) {
+        explore_directory(path);
+    });
 
     return m_pathes;
 }
@@ -95,7 +99,6 @@ bool PathExplorer::should_be_skipped(const std::filesystem::path &p,
 
 void PathExplorer::explore_directory(const std::filesystem::path &dir_path)
 {
-
     if (!std::filesystem::exists(dir_path))
     {
         std::cerr << dir_path << " doesn't exist. Skipping\n";
@@ -104,7 +107,7 @@ void PathExplorer::explore_directory(const std::filesystem::path &dir_path)
     
     if (std::filesystem::is_regular_file(dir_path) and !should_be_skipped(dir_path))
     {
-        m_pathes.push_back(dir_path);
+        m_pathes.insert(dir_path);
         return;
     }
 
@@ -122,7 +125,7 @@ void PathExplorer::explore_directory(const std::filesystem::path &dir_path)
             continue;
         }
 
-        m_pathes.push_back(p);
+        m_pathes.insert(p);
     }
 }
 

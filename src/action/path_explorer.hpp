@@ -42,13 +42,13 @@ public:
 
     bool should_be_skipped(const std::filesystem::path &p, IsSymlinkFunc is_symlink = std::filesystem::is_symlink) const;
 
-    std::vector<std::filesystem::path> explore();
+    std::set<std::filesystem::path> explore();
     void set_config(std::shared_ptr<Config> config);
     void explore_directory(const std::filesystem::path &dir_path);
     std::filesystem::path guess_last_backup() const;
 
 private:
-    std::vector<std::filesystem::path> m_pathes;
+    std::set<std::filesystem::path> m_pathes;
     std::shared_ptr<Config>  m_config;
 
     bool is_pattern_match(const std::filesystem::path & path) const;

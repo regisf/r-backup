@@ -33,11 +33,11 @@
 #include "command_line/backup_command_line.hpp"
 
 #include <string>
-#include <vector>
 #include <filesystem>
 #include <regex>
 #include <memory>
 #include <iostream>
+#include <set>
 
 
 enum class CommandLineType
@@ -80,9 +80,9 @@ struct Config : public IConfig
     CommandLineType action{CommandLineType::Unknown};
     BackupCommandLineOptions backup;
 
-    std::vector<std::string> include_directories;
+    std::set<std::string> include_directories;
     std::vector<std::regex> exclusion_patterns;
-    std::vector<std::string> exclusion_paths;
+    std::set<std::string> exclusion_paths;
     std::filesystem::path root_path;
 
     /**

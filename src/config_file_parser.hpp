@@ -76,7 +76,7 @@ public:
      * 
      * @return std::vector<std::string>& The excluded path
      */
-    std::vector<std::string> get_paths_to_explore();
+    std::set<std::string> get_paths_to_explore();
     
 private:
     void extract_destination_path();
@@ -87,9 +87,9 @@ private:
     void extract_excluded_patterns(const YAML::Node &excluded);
 
 private:
-    std::vector<std::string> m_include_directories;
+    std::set<std::string> m_include_directories;
     std::vector<std::regex> m_exclude_patterns;
-    std::vector<std::string> m_exclude_paths;
+    std::set<std::string> m_exclude_paths;
     YAML::Node m_config;
     std::string m_root;
     std::filesystem::path m_destination;

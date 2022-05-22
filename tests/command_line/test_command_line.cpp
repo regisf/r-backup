@@ -55,7 +55,7 @@ TEST(TestCommandLive, test_unknown_command_failed)
 TEST(TestCommandLine, test_parse_actions)
 {
     // Arrange
-    std::vector<const char *> actions = {
+    std::set<const char *> actions = {
         "backup",
         "help", "-h", "--help",
         "init",

@@ -48,7 +48,7 @@ namespace action {
     {
         if (action::Backup bk_act(config, filecopy); bk_act.can_backup())
         {
-            std::vector<std::filesystem::path> pathes;
+            std::set<std::filesystem::path> pathes;
 
             if (!config->is_backup_exists())
             {
@@ -68,7 +68,7 @@ namespace action {
         }
     }
 
-    void Backup::backup(const std::vector<std::filesystem::path> &pathes) {
+    void Backup::backup(const std::set<std::filesystem::path> &pathes) {
         if (!pathes.empty()) {
             std::cout << "Got " << pathes.size() << " files to backup\n";
         } else {
