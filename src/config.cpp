@@ -76,9 +76,9 @@ bool Config::is_destination_dir_exists(const std::filesystem::path &source) cons
     return std::filesystem::exists(dest_parent) && std::filesystem::is_directory(dest_parent);
 }
 
-void Config::set_backup_configuration(BackupCommandLineOptions config)
+void Config::set_backup_configuration(BackupCommandLineOptions backup_options)
 {
-    backup = std::move(config);
+    backup = std::move(backup_options);
     action = CommandLineType::Backup;
 }
 
