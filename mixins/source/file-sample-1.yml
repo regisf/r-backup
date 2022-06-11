@@ -1,0 +1,11 @@
+---
+hello:
+  this:
+    file:
+      should:
+        be:
+          duplicated:
+            - with
+            - its
+            - parent
+

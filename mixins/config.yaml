@@ -1,0 +1,13 @@
+# Minimalistic config file for features testing
+root: mixins/source
+destination: mixins/dest
+name: r-backup
+periodicity: 1 day
+strategy: keep all
+exclude:
+  patterns:
+    - ^exclude
+  paths:
+    - truc
+include:
+  - one
