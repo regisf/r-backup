@@ -68,3 +68,14 @@ TEST(TestConfig, test_merge_backup)
     ASSERT_EQ(config->root_path, expected_root_path);
 }
 
+TEST(TestConfig, test_instance)
+{
+    // Arrange
+    auto first_config = Config::instance();
+
+    // Act
+    auto config = Config::instance();
+
+    // Assert
+    ASSERT_EQ(first_config.get(), config.get());
+}

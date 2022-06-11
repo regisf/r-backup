@@ -56,7 +56,7 @@ namespace action
     class Backup
     {
     public:
-        explicit Backup(const std::shared_ptr<Config> & config, FileCopy copy);
+        explicit Backup(const std::shared_ptr<Config> & config, utils::FileCopy copy);
         void backup(const std::set<std::filesystem::path> &pathes);
         [[nodiscard]] bool can_backup();
         [[nodiscard]] std::string error_message() const;
@@ -64,12 +64,12 @@ namespace action
         /**
          * Create backup object and start to backup
          */
-        static void start(const std::shared_ptr<Config> & config, FileCopy copy);
+        static void start(const std::shared_ptr<Config> & config, utils::FileCopy copy);
 
     private:
         std::shared_ptr<Config> m_config;
         std::string m_error_msg;
-        FileCopy m_file_copy;
+        utils::FileCopy m_file_copy;
     };
 }
 

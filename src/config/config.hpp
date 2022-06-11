@@ -137,6 +137,9 @@ struct Config : public IConfig
      */
     void merge(const std::shared_ptr<Config> & src);
 
+
+    static std::shared_ptr<Config> instance();
+
 private:
     /**
      * @brief Extract path without the root path

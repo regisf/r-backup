@@ -31,6 +31,18 @@
 #include <algorithm>
 #include <iostream>
 
+std::shared_ptr<Config> Config::instance()
+{
+    static std::shared_ptr<Config> config{nullptr};
+
+    if (config == nullptr)
+    {
+        config = std::make_shared<Config>();
+    }
+
+    return config;
+}
+
 std::filesystem::path Config::get_real_destination_directory() const
 {
     return backup.destination / backup.backup_dir_name;

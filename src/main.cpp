@@ -85,7 +85,7 @@ Options:
 static StatusCode do_backup(const std::shared_ptr<Config> &config)
 {    
     StatusCode ret_val{StatusCode::DefaultStatusCode};
-    FileCopy filecopy{config};
+    utils::FileCopy filecopy;
 
     try
     {

@@ -6,7 +6,7 @@
 TEST(TestBackup, test_backup_start)
 {
     auto config = nullptr;
-    auto fileCopy = FileCopy();
+    auto fileCopy = utils::FileCopy();
 
     // action::Backup::start(config, fileCopy);
 }

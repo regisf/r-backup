@@ -39,12 +39,12 @@
 
 
 namespace action {
-    Backup::Backup(const std::shared_ptr<Config> &config, FileCopy copy)
+    Backup::Backup(const std::shared_ptr<Config> &config, utils::FileCopy copy)
             : m_config(config)
             , m_file_copy(std::move(copy))
     {}
 
-    void Backup::start(const std::shared_ptr<Config>& config, FileCopy filecopy)
+    void Backup::start(const std::shared_ptr<Config>& config, utils::FileCopy filecopy)
     {
         if (action::Backup bk_act(config, filecopy); bk_act.can_backup())
         {
