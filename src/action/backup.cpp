@@ -27,18 +27,12 @@
 #include "backup.hpp"
 #include "path_explorer.hpp"
 
-#include "../command_line/command_line.hpp"
-#include "../config/config_file_parser.hpp"
-#include "../utils/date.hpp"
-
 #include <iostream>
 #include <filesystem>
-#include <utility>
-
-#include <yaml-cpp/yaml.h>
 
 
-namespace action {
+namespace action
+{
     void Backup::start()
     {
         if (action::Backup bk_act; bk_act.can_backup())
@@ -61,16 +55,25 @@ namespace action {
         }
     }
 
-    void Backup::backup(const std::set<std::filesystem::path> &pathes) {
-        if (!pathes.empty()) {
-            std::cout << "Got " << pathes.size() << " files to backup\n";
-        } else {
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
+
+    void Backup::backup(const std::set<std::filesystem::path> &paths)
+    {
+        if (!paths.empty())
+        {
+            std::cout << "Got " << paths.size() << " files to backup\n";
+        }
+        else
+        {
             std::cout << "Nothing to backup\n";
         }
 
         const auto destination = Config::instance()->backup.destination;
-        for (const auto &path : pathes) {
-            if (Config::instance()->backup.verbose) {
+        for (const auto &path: paths)
+        {
+            if (Config::instance()->backup.verbose)
+            {
                 std::cout << "Copying " << path.string() << " to " << (destination / path.filename()).string() << "\n";
             }
 
@@ -78,14 +81,19 @@ namespace action {
         }
     }
 
-    bool Backup::can_backup() {
-        if (Config::instance()->backup.dry_run) {
+#pragma clang diagnostic pop
+
+    bool Backup::can_backup()
+    {
+        if (Config::instance()->backup.dry_run)
+        {
             return true;
         }
 
         bool status = true;
 
-        if (!std::filesystem::exists(Config::instance()->backup.destination)) {
+        if (!std::filesystem::exists(Config::instance()->backup.destination))
+        {
             std::stringstream ss;
             ss << "Unable to find the destination directory:"
                << Config::instance()->backup.destination;
@@ -97,5 +105,6 @@ namespace action {
         return status;
     }
 
-    std::string Backup::error_message() const { return m_error_msg; }
+    std::string Backup::error_message() const
+    { return m_error_msg; }
 }

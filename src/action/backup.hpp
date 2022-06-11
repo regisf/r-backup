@@ -57,7 +57,7 @@ namespace action
     {
     public:
         explicit Backup()=default;
-        void backup(const std::set<std::filesystem::path> &pathes);
+        void backup(const std::set<std::filesystem::path> &paths);
         [[nodiscard]] bool can_backup();
         [[nodiscard]] std::string error_message() const;
 

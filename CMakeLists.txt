@@ -15,3 +15,4 @@ pkg_check_modules(YAMLCPP REQUIRED yaml-cpp)
 
 add_subdirectory(src)
 add_subdirectory(tests)
+
