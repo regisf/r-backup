@@ -1,4 +1,4 @@
-#include "../../src/config.hpp"
+#include "../../src/config/config.hpp"
 #include "../../src/command_line/command_line_action.hpp"
 
 #include <gtest/gtest.h>

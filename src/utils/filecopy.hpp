@@ -1,7 +1,7 @@
 #ifndef FILE_COPY_HPP
 #define FILE_COPY_HPP
 
-#include "../config.hpp"
+#include "../config/config.hpp"
 
 #include <filesystem>
 #include <memory>

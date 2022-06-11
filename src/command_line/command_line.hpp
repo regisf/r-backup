@@ -27,7 +27,7 @@
 #ifndef COMMAND_LINE_HPP
 #define COMMAND_LINE_HPP
 
-#include "../config.hpp"
+#include "../config/config.hpp"
 
 #include <vector>
 #include <string>

@@ -27,10 +27,10 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-#include "values/strategy.hpp"
-#include "values/destination.hpp"
-#include "values/configuration.hpp"
-#include "command_line/backup_command_line.hpp"
+#include "../values/strategy.hpp"
+#include "../values/destination.hpp"
+#include "../values/configuration.hpp"
+#include "../command_line/backup_command_line.hpp"
 
 #include <string>
 #include <filesystem>

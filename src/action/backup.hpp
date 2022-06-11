@@ -27,7 +27,7 @@
 #ifndef ACTION_BACKUP_HPP
 #define ACTION_BACKUP_HPP
 
-#include "../config.hpp"
+#include "../config/config.hpp"
 #include "../utils/filecopy.hpp"
 
 #include <vector>

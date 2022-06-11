@@ -28,7 +28,7 @@
 #include "command_line.hpp"
 #include "command_line_action.hpp"
 
-#include "../config_file_parser.hpp"
+#include "../config/config_file_parser.hpp"
 
 #include <iostream>
 #include <cstdlib>

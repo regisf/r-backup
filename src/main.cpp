@@ -37,7 +37,7 @@
 #include "action/initializer.hpp"
 #include "action/path_explorer.hpp"
 #include "command_line/command_line.hpp"
-#include "config_file_parser.hpp"
+#include "config/config_file_parser.hpp"
 
 #include <cstdlib>
 #include <iostream>

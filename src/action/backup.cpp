@@ -28,8 +28,8 @@
 #include "path_explorer.hpp"
 
 #include "../command_line/command_line.hpp"
-#include "../config_file_parser.hpp"
-#include "../date.hpp"
+#include "../config/config_file_parser.hpp"
+#include "../utils/date.hpp"
 
 #include <iostream>
 #include <filesystem>
