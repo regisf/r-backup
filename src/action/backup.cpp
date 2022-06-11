@@ -41,6 +41,7 @@ namespace action
 
             if (!Config::instance()->is_backup_exists())
             {
+                auto c = Config::instance();
                 std::cout << "Exploring directory " << Config::instance()->root_path << "\n";
                 PathExplorer explorer;
                 pathes = explorer.explore();

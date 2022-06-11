@@ -95,10 +95,6 @@ void CommandLine::init_configuration()
 {
 }
 
-void CommandLine::restore_configuration()
-{
-}
-
 std::vector<std::string> CommandLine::get_args() noexcept
 {
     return args;

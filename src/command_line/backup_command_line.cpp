@@ -31,7 +31,7 @@ Options are:
     }
 
 
-BackupCommandLine::BackupCommandLine(const std::vector<std::string> & args) : args(args)
+BackupCommandLine::BackupCommandLine(const std::vector<std::string> &args) : args(args)
 {
 
 }
@@ -74,8 +74,7 @@ BackupCommandLineOptions BackupCommandLine::parse(exit_callback exit_cb)
 
         else if (!argument.compare("--config-file"))
         {
-
-            EXPECT_NEXT_ARG(i, l, config-file)
+            EXPECT_NEXT_ARG(i, l, config - file)
             options.config_file = args.at(++i);
             unknown_option = false;
         }
@@ -89,7 +88,7 @@ BackupCommandLineOptions BackupCommandLine::parse(exit_callback exit_cb)
 
         else if (!argument.compare("--backup-directory-name"))
         {
-            EXPECT_NEXT_ARG(i,l, backup-directory-name)
+            EXPECT_NEXT_ARG(i, l, backup - directory - name)
             options.backup_dir_name = args.at(++i);
             unknown_option = false;
         }

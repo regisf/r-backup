@@ -80,13 +80,10 @@ public:
     std::vector<std::string> get_args() noexcept override;
 
 private:
-    std::filesystem::path resolve_path(const std::string &path) const;
     BackupCommandLineOptions backup_configuration();
     void init_configuration();
-    void restore_configuration();
 
 private:
-    std::shared_ptr<Config> m_config;
     std::vector<std::string> args;
 };
 

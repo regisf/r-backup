@@ -143,9 +143,11 @@ int main(int argc, char **argv)
     {
         CommandLine cmdLine(argc, argv);
         auto config = cmdLine.parse();
-
         auto config_from_file = ConfigFileParser::read_default_config_file(config->backup.config_file);
-        Config::instance()->merge(config);
+        config_from_file->merge(config);
+        Config::instance()->merge(config_from_file);
+        auto c = Config::instance();
+        std::cout << Config::instance()->to_string();
 
         ret_val = process_action();
     }

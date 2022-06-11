@@ -30,6 +30,7 @@
 #include <filesystem>
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 
 std::shared_ptr<Config> Config::instance(bool clear)
 {
@@ -122,4 +123,24 @@ void Config::merge(const std::shared_ptr<Config> & src)
     merge_if_exists(!src->exclusion_patterns.empty(), src->exclusion_patterns, exclusion_patterns);
     merge_if_exists(src->include_directories, include_directories);
     merge_if_exists(src->root_path, root_path);
+}
+
+std::string Config::to_string()
+{
+
+    std::stringstream ss;
+    ss
+       << "dry_run: " << backup.dry_run << "\n"
+       << "strategy: " << backup.strategy << "\n"
+       << "nth: " << backup.nth << "\n"
+       << "verbose: " << backup.verbose << "\n"
+       << "config_file: " << backup.config_file << "\n"
+       << "destination: " << backup.destination << "\n"
+       << "backup_dir_dname: " << backup.backup_dir_name << "\n"
+//       << "dry_run: " << join(exclusion_paths) << "\n"
+//       << "dry_run: " << join(exclusion_patterns) << "\n"
+//       << "dry_run: " << join(include_directories) << "\n"
+       << "root_path: " << root_path << "\n"
+    ;
+    return ss.str();
 }

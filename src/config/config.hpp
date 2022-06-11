@@ -140,6 +140,8 @@ struct Config : public IConfig
 
     static std::shared_ptr<Config> instance(bool clear = false);
 
+    std::string to_string();
+
 private:
     /**
      * @brief Extract path without the root path
@@ -148,6 +150,7 @@ private:
      * @return std::filesystem::path The path without the base path
      */
     std::filesystem::path extract_from_root_path(const std::filesystem::path &path) const;
+
 };
 
 #endif
