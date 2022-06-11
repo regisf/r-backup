@@ -82,14 +82,13 @@ Options:
  * Process the backup action.
  * The return code is 2
  */
-static StatusCode do_backup(const std::shared_ptr<Config> &config)
+static StatusCode do_backup()
 {    
     StatusCode ret_val{StatusCode::DefaultStatusCode};
-    utils::FileCopy filecopy;
 
     try
     {
-        action::Backup::start(config, filecopy);
+        action::Backup::start();
     }
 
     catch (const action::BackupError & error)
@@ -102,11 +101,11 @@ static StatusCode do_backup(const std::shared_ptr<Config> &config)
     return ret_val;
 }
 
-static StatusCode process_action(const std::shared_ptr<Config> &config)
+static StatusCode process_action()
 {
     auto ret_val = StatusCode::SuccessStatusCode;
 
-    switch (config->action)
+    switch (Config::instance()->action)
     {
     case CommandLineType::Help:
         display_usage();
@@ -117,7 +116,7 @@ static StatusCode process_action(const std::shared_ptr<Config> &config)
         break;
 
     case CommandLineType::Backup:
-        ret_val = do_backup(config);
+        ret_val = do_backup();
         break;
 
     case CommandLineType::Restore:
@@ -146,9 +145,9 @@ int main(int argc, char **argv)
         auto config = cmdLine.parse();
 
         auto config_from_file = ConfigFileParser::read_default_config_file(config->backup.config_file);
-        config_from_file->merge(config);
+        Config::instance()->merge(config);
 
-        ret_val = process_action(config_from_file);
+        ret_val = process_action();
     }
     catch (const CommandLineError &err)
     {

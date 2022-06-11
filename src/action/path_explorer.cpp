@@ -33,24 +33,16 @@
 #include <iostream>
 
 
-PathExplorer::PathExplorer(std::shared_ptr<Config> config)
-    : m_config(config) {}
-
-void PathExplorer::set_config(std::shared_ptr<Config> config)
-{
-    m_config = config;
-}
-
 std::set<std::filesystem::path> PathExplorer::explore()
 {
-    auto directories = m_config->include_directories;
+    auto directories = Config::instance()->include_directories;
 
     // auto last_backup_date = guess_last_backup();
 
     // No included directory so use backup root directory
     if (!directories.size())
     {
-        directories.insert(m_config->root_path);
+        directories.insert(Config::instance()->root_path);
     }
 
     std::for_each(directories.begin(),
@@ -66,7 +58,7 @@ bool PathExplorer::is_pattern_match(const std::filesystem::path &  p) const
 {
     const auto pstr = p.string();
 
-    for (const auto &pattern : m_config->exclusion_patterns)
+    for (const auto &pattern : Config::instance()->exclusion_patterns)
     {
         if (std::regex_search(pstr, std::regex{pattern}))
         {
@@ -80,7 +72,8 @@ bool PathExplorer::is_pattern_match(const std::filesystem::path &  p) const
 bool PathExplorer::is_in_exclusion_path(const std::filesystem::path & p) const
 {
     const auto pstr = p.string();
-    for (const auto &path : m_config->exclusion_paths)
+
+    for (const auto &path : Config::instance()->exclusion_paths)
     {
         if (pstr.starts_with(path))
         {
@@ -133,7 +126,7 @@ std::filesystem::path PathExplorer::guess_last_backup() const
 {
     std::vector<std::filesystem::path> directories;
 
-    auto root_backup = m_config->get_real_destination_directory();
+    auto root_backup = Config::instance()->get_real_destination_directory();
     for (const std::filesystem::path & path : std::filesystem::directory_iterator{root_backup})
     {   
         directories.push_back(path);

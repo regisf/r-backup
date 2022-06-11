@@ -90,7 +90,7 @@ private:
     std::set<std::string> m_include_directories;
     std::vector<std::regex> m_exclude_patterns;
     std::set<std::string> m_exclude_paths;
-    YAML::Node m_config;
+    YAML::Node m_config_node;
     std::string m_root;
     std::filesystem::path m_destination;
 };

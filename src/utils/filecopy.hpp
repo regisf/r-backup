@@ -10,25 +10,10 @@
 
 namespace utils
 {
-    class IFileCopy
+    class FileCopy
     {
     public:
-        virtual ~IFileCopy() = default;
-        virtual void copy_file(const std::filesystem::path &source, const std::filesystem::path &dest) = 0;
-        virtual void effective_copy(const std::filesystem::path &source, const std::filesystem::path &dest) = 0;
-    };
-
-    /**
-     * @brief FileCopy implementation
-     */
-    class FileCopy : public IFileCopy
-    {
-    public:
-        explicit FileCopy() = default;
-        ~FileCopy() override = default;
-
-        void copy_file(const std::filesystem::path &source, const std::filesystem::path &dest) override;
-        void effective_copy(const std::filesystem::path &source, const std::filesystem::path &dest) override;
+        static void copy_file(const std::filesystem::path &source, const std::filesystem::path &dest);
     };
 }
 #endif

@@ -51,7 +51,7 @@ void ConfigFileParser::parse_file(const std::string &path)
 {
     try
     {
-        m_config = YAML::LoadFile(path);
+        m_config_node = YAML::LoadFile(path);
     }
     catch (YAML::ParserException &err)
     {
@@ -72,8 +72,8 @@ void ConfigFileParser::parse_file(const std::string &path)
 
 void ConfigFileParser::extract_destination_path()
 {
-    const auto destination = m_config["destination"];
-    const auto name = m_config["name"];
+    const auto destination = m_config_node["destination"];
+    const auto name = m_config_node["name"];
 
     if (destination.IsDefined())
     {
@@ -90,7 +90,7 @@ void ConfigFileParser::extract_destination_path()
 
 void ConfigFileParser::extract_root_path()
 {
-    const auto root = m_config["root"];
+    const auto root = m_config_node["root"];
 
     if (root.IsDefined())
     {
@@ -118,7 +118,7 @@ void ConfigFileParser::extract_root_path()
 void ConfigFileParser::extract_exclusions()
 {
 
-    const auto &excluded = m_config["exclude"];
+    const auto &excluded = m_config_node["exclude"];
     if (excluded.IsDefined())
     {
         extract_excluded_patterns(excluded);
@@ -161,7 +161,7 @@ void ConfigFileParser::extract_excluded_patterns(const YAML::Node &excluded)
 
 void ConfigFileParser::extract_inclusions()
 {
-    const auto &included = m_config["include"];
+    const auto &included = m_config_node["include"];
     if (included.IsDefined())
     {
         for (const auto &include : included)

@@ -31,11 +31,11 @@
 #include <algorithm>
 #include <iostream>
 
-std::shared_ptr<Config> Config::instance()
+std::shared_ptr<Config> Config::instance(bool clear)
 {
     static std::shared_ptr<Config> config{nullptr};
 
-    if (config == nullptr)
+    if (config == nullptr || clear)
     {
         config = std::make_shared<Config>();
     }

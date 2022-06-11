@@ -17,11 +17,11 @@ namespace mock
 TEST(TestPathExplorer, test_pattern_should_be_skipped)
 {
     // Arrange
-    std::shared_ptr<Config> config = std::make_shared<Config>();
+    std::shared_ptr<Config> config = Config::instance();
     std::regex regex{"\\.git"};
     config->exclusion_patterns.push_back(regex);
 
-    PathExplorer pathExplorer{config};
+    PathExplorer pathExplorer;
     std::filesystem::path path{".git"};
 
     // Act
@@ -34,11 +34,11 @@ TEST(TestPathExplorer, test_pattern_should_be_skipped)
 TEST(TestPathExplorer, test_pattern_should_not_be_skipped)
 {
     // Arrange
-    std::shared_ptr<Config> config = std::make_shared<Config>();
+    std::shared_ptr<Config> config = Config::instance();
     std::regex regex{"\\.git"};
     config->exclusion_patterns.push_back(regex);
 
-    PathExplorer pathExplorer{config};
+    PathExplorer pathExplorer;
     std::filesystem::path path{".got"};
 
     // Act
@@ -51,12 +51,12 @@ TEST(TestPathExplorer, test_pattern_should_not_be_skipped)
 TEST(TestPathExplorer, test_exclude_dir_should_be_skipped)
 {
     // Arrange
-    std::shared_ptr<Config> config = std::make_shared<Config>();
+    std::shared_ptr<Config> config = Config::instance();
     std::filesystem::path exclude_path{"toto_titi"};
     config->exclusion_paths.insert("toto_titi");
     config->root_path = "/home/test";
 
-    PathExplorer pathExplorer{config};
+    PathExplorer pathExplorer;
 
     // Act
     auto result = pathExplorer.should_be_skipped(exclude_path);
@@ -68,12 +68,12 @@ TEST(TestPathExplorer, test_exclude_dir_should_be_skipped)
 TEST(TestPathExplorer, test_exclude_dir_should_not_be_skipped)
 {
     // Arrange
-    std::shared_ptr<Config> config = std::make_shared<Config>();
+    std::shared_ptr<Config> config = Config::instance(true);
     std::filesystem::path exclude_path{"toto_titi"};
     config->exclusion_paths.insert("tata");
     config->root_path = "/home/test";
 
-    PathExplorer pathExplorer{config};
+    PathExplorer pathExplorer;
 
     // Act
     auto result = pathExplorer.should_be_skipped(exclude_path);
@@ -85,11 +85,11 @@ TEST(TestPathExplorer, test_exclude_dir_should_not_be_skipped)
 TEST(TestPathExplorer, test_symlink_returns_true)
 {
     // Arrange
-    std::shared_ptr<Config> config = std::make_shared<Config>();
+    std::shared_ptr<Config> config = Config::instance();
     std::filesystem::path exclude_path{"toto_titi"};
     config->exclusion_paths.insert("tata");
 
-    PathExplorer pathExplorer{config};
+    PathExplorer pathExplorer;
 
     // Act
     auto result = pathExplorer.should_be_skipped(exclude_path,
@@ -102,11 +102,11 @@ TEST(TestPathExplorer, test_symlink_returns_true)
 TEST(TestPathExplorer, test_symlink_returns_false)
 {
     // Arrange
-    std::shared_ptr<Config> config = std::make_shared<Config>();
+    std::shared_ptr<Config> config = Config::instance();
     std::filesystem::path exclude_path{"toto_titi"};
     config->exclusion_paths.insert("tata");
 
-    PathExplorer pathExplorer{config};
+    PathExplorer pathExplorer;
 
     // Act
     auto result = pathExplorer.should_be_skipped(exclude_path,

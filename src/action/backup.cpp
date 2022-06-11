@@ -39,25 +39,18 @@
 
 
 namespace action {
-    Backup::Backup(const std::shared_ptr<Config> &config, utils::FileCopy copy)
-            : m_config(config)
-            , m_file_copy(std::move(copy))
-    {}
-
-    void Backup::start(const std::shared_ptr<Config>& config, utils::FileCopy filecopy)
+    void Backup::start()
     {
-        if (action::Backup bk_act(config, filecopy); bk_act.can_backup())
+        if (action::Backup bk_act; bk_act.can_backup())
         {
             std::set<std::filesystem::path> pathes;
 
-            if (!config->is_backup_exists())
+            if (!Config::instance()->is_backup_exists())
             {
-                // spdlog::info("Exploring directory {}",config->root_path);
-                std::cout << "Exploring directory " << config->root_path << "\n";
-                PathExplorer explorer(config);
+                std::cout << "Exploring directory " << Config::instance()->root_path << "\n";
+                PathExplorer explorer;
                 pathes = explorer.explore();
                 std::cout << "Got " << pathes.size() << " files found\n";
-                // spdlog::info("Got {} files found", pathes.size());
             }
             else
             {
@@ -75,27 +68,27 @@ namespace action {
             std::cout << "Nothing to backup\n";
         }
 
-        const auto destination = m_config->backup.destination;
+        const auto destination = Config::instance()->backup.destination;
         for (const auto &path : pathes) {
-            if (m_config->backup.verbose) {
+            if (Config::instance()->backup.verbose) {
                 std::cout << "Copying " << path.string() << " to " << (destination / path.filename()).string() << "\n";
             }
 
-            m_file_copy.copy_file(path, destination);
+            utils::FileCopy::copy_file(path, destination);
         }
     }
 
     bool Backup::can_backup() {
-        if (m_config->backup.dry_run) {
+        if (Config::instance()->backup.dry_run) {
             return true;
         }
 
         bool status = true;
 
-        if (!std::filesystem::exists(m_config->backup.destination)) {
+        if (!std::filesystem::exists(Config::instance()->backup.destination)) {
             std::stringstream ss;
             ss << "Unable to find the destination directory:"
-               << m_config->backup.destination;
+               << Config::instance()->backup.destination;
 
             status = false;
             m_error_msg = ss.str();
