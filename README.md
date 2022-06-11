@@ -11,6 +11,8 @@ This project is written with C++ 20
 ## Dependencies 
 
 * yaml-cpp
+s* gtest
+* fakeit
 
 ## Build
 
