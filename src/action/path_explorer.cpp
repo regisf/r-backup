@@ -25,8 +25,6 @@
  */
 
 #include "path_explorer.hpp"
-#include "../command_line/command_line.hpp"
-#include "../utils/date.hpp"
 
 #include <algorithm>
 #include <regex>
@@ -40,7 +38,7 @@ std::set<std::filesystem::path> PathExplorer::explore()
     // auto last_backup_date = guess_last_backup();
 
     // No included directory so use backup root directory
-    if (!directories.size())
+    if (directories.empty())
     {
         directories.insert(Config::instance()->root_path);
     }
@@ -48,40 +46,35 @@ std::set<std::filesystem::path> PathExplorer::explore()
     std::for_each(directories.begin(),
                   directories.end(),
                   [&](const auto &path) {
-        explore_directory(path);
-    });
+                      explore_directory(path);
+                  });
 
     return m_pathes;
 }
 
-bool PathExplorer::is_pattern_match(const std::filesystem::path &  p) const
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
+
+bool PathExplorer::is_pattern_match(const std::filesystem::path &p) const
 {
     const auto pstr = p.string();
-
-    for (const auto &pattern : Config::instance()->exclusion_patterns)
-    {
-        if (std::regex_search(pstr, std::regex{pattern}))
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return std::ranges::any_of(Config::instance()->exclusion_patterns.begin(),
+                               Config::instance()->exclusion_patterns.end(),
+                               [&pstr](const auto &p) {
+                                   return std::regex_search(pstr, std::regex{p});
+                               });
 }
 
-bool PathExplorer::is_in_exclusion_path(const std::filesystem::path & p) const
+#pragma clang diagnostic pop
+
+bool PathExplorer::is_in_exclusion_path(const std::filesystem::path &p) const
 {
     const auto pstr = p.string();
-
-    for (const auto &path : Config::instance()->exclusion_paths)
-    {
-        if (pstr.starts_with(path))
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return std::ranges::any_of(Config::instance()->exclusion_paths.begin(),
+                               Config::instance()->exclusion_paths.end(),
+                               [&pstr](const auto &path) {
+                                   return pstr.starts_with(path);
+                               });
 }
 
 bool PathExplorer::should_be_skipped(const std::filesystem::path &p,
@@ -97,14 +90,14 @@ void PathExplorer::explore_directory(const std::filesystem::path &dir_path)
         std::cerr << dir_path << " doesn't exist. Skipping\n";
         return;
     }
-    
+
     if (std::filesystem::is_regular_file(dir_path) and !should_be_skipped(dir_path))
     {
         m_pathes.insert(dir_path);
         return;
     }
 
-     for (auto &p : std::filesystem::directory_iterator(dir_path))
+    for (auto &p: std::filesystem::directory_iterator(dir_path))
     {
 
         if (should_be_skipped(p))
@@ -127,14 +120,17 @@ std::filesystem::path PathExplorer::guess_last_backup() const
     std::vector<std::filesystem::path> directories;
 
     auto root_backup = Config::instance()->get_real_destination_directory();
-    for (const std::filesystem::path & path : std::filesystem::directory_iterator{root_backup})
-    {   
+
+    for (const std::filesystem::path &path: std::filesystem::directory_iterator{root_backup})
+    {
         directories.push_back(path);
     }
 
-    std::sort(directories.begin(), directories.end(), [](auto& s1, auto& s2) {
-        return s1 > s2;
-    });
+    std::sort(directories.begin(),
+              directories.end(),
+              [](auto &s1, auto &s2) {
+                  return s1 > s2;
+              });
 
     return directories.at(0);
 }
