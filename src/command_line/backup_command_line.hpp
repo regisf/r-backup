@@ -24,18 +24,12 @@ struct BackupCommandLineOptions
     std::filesystem::path backup_dir_name;
 };
 
-class IBackupCommandLine
+class BackupCommandLine
 {
 public:
-    virtual BackupCommandLineOptions parse(exit_callback exit_cb) = 0;
-};
+    explicit BackupCommandLine(std::vector<std::string>  args);
 
-class BackupCommandLine : private IBackupCommandLine
-{
-public:
-    explicit BackupCommandLine(const std::vector<std::string> & args);
-
-    BackupCommandLineOptions parse(exit_callback exit_cb = &std::exit) override;
+    BackupCommandLineOptions parse(exit_callback exit_cb = &std::exit);
 
 private:
     std::vector<std::string> args;

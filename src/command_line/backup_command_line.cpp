@@ -3,8 +3,9 @@
 
 #include <iostream>
 #include <sstream>
+#include <utility>
 
-static const std::string USAGE = R"(
+static const char* USAGE = R"(
 r-backup backup [OPTIONS]
 
 The options given override the default configuration file.
@@ -26,39 +27,37 @@ Options are:
 )";
 
 #define EXPECT_NEXT_ARG(a, b, c) \
-    if ((a + 1) == b) { \
+    if (((a) + 1) == (b)) { \
         throw CommandLineError("Error: --##c option need an extra argument"); \
     }
 
-
-BackupCommandLine::BackupCommandLine(const std::vector<std::string> &args) : args(args)
-{
-
-}
+BackupCommandLine::BackupCommandLine(std::vector<std::string> args)
+        : args(std::move(args))
+{}
 
 BackupCommandLineOptions BackupCommandLine::parse(exit_callback exit_cb)
 {
     bool unknown_option{false};
-
+    
     for (int i = 1, l = args.size(); i < l; ++i)
     {
         const std::string argument{args.at(i)};
 
-        if (!(argument.compare("help") && argument.compare("--help") && argument.compare("-h")))
+        if (argument == "help" || argument == "--help" || argument == "-h")
         {
             std::cerr << USAGE;
             exit_cb(0);
             unknown_option = false; // To avoid failure on testing
         }
 
-        else if (!argument.compare("--strategy"))
+        else if (argument == "--strategy")
         {
             EXPECT_NEXT_ARG(i, l, strategy)
             options.strategy = args.at(++i);
             unknown_option = false;
         }
 
-        else if (!argument.compare("--nth"))
+        else if (argument == "--nth")
         {
             EXPECT_NEXT_ARG(i, l, nth)
             std::stringstream ss;
@@ -66,34 +65,34 @@ BackupCommandLineOptions BackupCommandLine::parse(exit_callback exit_cb)
             ss >> options.nth;
         }
 
-        else if (!argument.compare("--dry-run"))
+        else if (argument == "--dry-run")
         {
             options.dry_run = true;
             unknown_option = false;
         }
 
-        else if (!argument.compare("--config-file"))
+        else if (argument == "--config-file")
         {
             EXPECT_NEXT_ARG(i, l, config - file)
             options.config_file = args.at(++i);
             unknown_option = false;
         }
 
-        else if (!argument.compare("--destination"))
+        else if (argument == "--destination")
         {
             EXPECT_NEXT_ARG(i, l, destination)
             options.destination = args.at(++i);
             unknown_option = false;
         }
 
-        else if (!argument.compare("--backup-directory-name"))
+        else if (argument == "--backup-directory-name")
         {
             EXPECT_NEXT_ARG(i, l, backup - directory - name)
             options.backup_dir_name = args.at(++i);
             unknown_option = false;
         }
 
-        else if (!argument.compare("--verbose"))
+        else if (argument == "--verbose")
         {
             options.verbose = true;
             unknown_option = false;
