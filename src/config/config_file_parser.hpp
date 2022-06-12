@@ -56,12 +56,13 @@ public:
     std::shared_ptr<Config> to_config() override;
 
     /**
-     * @brief Read the configuration file as given. If the file exists, the method parse it
+     * @brief Read the configuration file as given. If the file exists, the method parse it if not
+     * read the default config file
      * 
      * @param file_path The config file to read and parser
-     * @return A configuration object
+     * @return This parser object
      */
-    static std::shared_ptr<Config> read_default_config_file(const std::string & file_path = "");
+    static std::shared_ptr<ConfigFileParser> read_default_config_file(const std::string &file_path = "");
 
     /**
      * @brief Parse the configuration file. If there's a YAML syntax error, exit with status == 1
@@ -71,19 +72,18 @@ public:
      */
     void parse_file(const std::string &path);
 
-    /**
-     * @brief Get the excluded paths vector
-     * 
-     * @return std::vector<std::string>& The excluded path
-     */
-    std::set<std::string> get_paths_to_explore();
-    
+
 private:
     void extract_destination_path();
+
     void extract_root_path();
+
     void extract_exclusions();
+
     void extract_inclusions();
+
     void extract_excluded_paths(const YAML::Node &excluded);
+
     void extract_excluded_patterns(const YAML::Node &excluded);
 
 private:

@@ -83,7 +83,7 @@ Options:
  * The return code is 2
  */
 static StatusCode do_backup()
-{    
+{
     StatusCode ret_val{StatusCode::DefaultStatusCode};
 
     try
@@ -91,7 +91,7 @@ static StatusCode do_backup()
         action::Backup::start();
     }
 
-    catch (const action::BackupError & error)
+    catch (const action::BackupError &error)
     {
         std::cerr << "Error: Unable to backup because: " << error.what()
                   << std::endl;
@@ -107,29 +107,29 @@ static StatusCode process_action()
 
     switch (Config::instance()->action)
     {
-    case CommandLineType::Help:
-        display_usage();
-        break;
+        case CommandLineType::Help:
+            display_usage();
+            break;
 
-    case CommandLineType::Init:
-        action::initialize();
-        break;
+        case CommandLineType::Init:
+            action::initialize();
+            break;
 
-    case CommandLineType::Backup:
-        ret_val = do_backup();
-        break;
+        case CommandLineType::Backup:
+            ret_val = do_backup();
+            break;
 
-    case CommandLineType::Restore:
-        break;
+        case CommandLineType::Restore:
+            break;
 
-    case CommandLineType::Start:
-        break;
+        case CommandLineType::Start:
+            break;
 
-    case CommandLineType::Stop:
-        break;
+        case CommandLineType::Stop:
+            break;
 
-    case CommandLineType::Unknown:
-        break;
+        case CommandLineType::Unknown:
+            break;
     }
 
     return ret_val;
@@ -143,12 +143,14 @@ int main(int argc, char **argv)
     {
         CommandLine cmdLine(argc, argv);
         auto config = cmdLine.parse();
-        auto config_from_file = ConfigFileParser::read_default_config_file(config->backup.config_file);
-        config_from_file->merge(config);
-        Config::instance()->merge(config_from_file);
-        auto c = Config::instance();
-        std::cout << Config::instance()->to_string();
 
+        auto config_from_file = ConfigFileParser::read_default_config_file(
+                config->backup.config_file)->to_config();
+
+        Config::instance()->merge(config_from_file);
+        Config::instance()->merge(config);
+        auto c = Config::instance();
+        
         ret_val = process_action();
     }
     catch (const CommandLineError &err)

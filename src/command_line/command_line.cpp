@@ -53,28 +53,29 @@ CommandLine::CommandLine(int argc, char **argv)
 }
 
 std::shared_ptr<Config> CommandLine::parse()
-{    
+{
     std::shared_ptr<Config> config = std::make_shared<Config>();
     auto action = CommandLineAction::from_string(args.at(First));
 
     switch (action)
     {
-    case CommandLineType::Help:
-        config->action = CommandLineType::Help;
-        break;
+        case CommandLineType::Help:
+            config->action = CommandLineType::Help;
+            break;
 
-    case CommandLineType::Init:
-        init_configuration();
-        break;
+        case CommandLineType::Init:
+            init_configuration();
+            break;
 
-    case CommandLineType::Backup:
-        config->set_backup_configuration(backup_configuration());
-        break;
+        case CommandLineType::Backup:
+            config->set_backup_configuration(backup_configuration());
+            break;
 
-    case CommandLineType::Restore:
-    case CommandLineType::Start:
-    case CommandLineType::Stop:
-    default:
+
+        case CommandLineType::Restore:
+        case CommandLineType::Start:
+        case CommandLineType::Stop:
+        default:
         {
             std::stringstream ss;
             ss << "The action " << args.at(First) << " is not known";

@@ -35,7 +35,7 @@
 
 #define SystemSeparator std::string{"/"}
 
-std::shared_ptr<Config> ConfigFileParser::to_config() 
+std::shared_ptr<Config> ConfigFileParser::to_config()
 {
     auto config = std::make_shared<Config>();
     config->root_path = m_root;
@@ -49,6 +49,11 @@ std::shared_ptr<Config> ConfigFileParser::to_config()
 
 void ConfigFileParser::parse_file(const std::string &path)
 {
+    if (!std::filesystem::exists(path))
+    {
+        return;
+    }
+
     try
     {
         m_config_node = YAML::LoadFile(path);
@@ -57,11 +62,6 @@ void ConfigFileParser::parse_file(const std::string &path)
     {
         std::cerr << "Error while parsing : " << err.what() << "\n";
         std::exit(EXIT_FAILURE);
-    }
-    catch (std::exception &err)
-    {
-        std::cerr << "Error : " << err.what() << "\nContinue anyway. \n";
-        return;
     }
 
     extract_destination_path();
@@ -101,7 +101,8 @@ void ConfigFileParser::extract_root_path()
         char *home = std::getenv("HOME");
         if (home == nullptr)
         {
-            std::cerr << "Error: Unable to get HOME environment variable. I think you've got a serious problem" << std::endl;
+            std::cerr << "Error: Unable to get HOME environment variable. I think you've got a serious problem"
+                      << std::endl;
             std::exit(1);
         }
 
@@ -131,7 +132,7 @@ void ConfigFileParser::extract_excluded_paths(const YAML::Node &excluded)
     const auto &pathes = excluded["paths"];
     if (pathes.IsDefined())
     {
-        for (const auto &path : pathes)
+        for (const auto &path: pathes)
         {
             m_exclude_paths.insert(m_root + path.as<std::string>());
         }
@@ -143,17 +144,18 @@ void ConfigFileParser::extract_excluded_patterns(const YAML::Node &excluded)
     const auto &patterns = excluded["patterns"];
     if (patterns.IsDefined())
     {
-        for (const auto &pattern : patterns)
+        for (const auto &pattern: patterns)
         {
             const auto p = pattern.as<std::string>();
 
             try
             {
-                m_exclude_patterns.push_back(std::regex{p});
+                m_exclude_patterns.emplace_back(p);
             }
             catch (std::regex_error &err)
             {
-                std::cerr << "Regex error: pattern \"" << p << "\" is not an understandable regular expression." << std::endl;
+                std::cerr << "Regex error: pattern \"" << p << "\" is not an understandable regular expression."
+                          << std::endl;
             }
         }
     }
@@ -164,47 +166,29 @@ void ConfigFileParser::extract_inclusions()
     const auto &included = m_config_node["include"];
     if (included.IsDefined())
     {
-        for (const auto &include : included)
+        for (const auto &include: included)
         {
             m_include_directories.insert(m_root + include.as<std::string>());
         }
     }
 }
 
-std::set<std::string> ConfigFileParser::get_paths_to_explore()
+std::shared_ptr<ConfigFileParser> ConfigFileParser::read_default_config_file(const std::string &file_path)
 {
-    std::set<std::string> paths;
-
-    if (m_include_directories.size()) {
-        const auto sep = m_root.ends_with("/") ? "" : "/";
-
-        std::for_each(m_include_directories.begin(), m_include_directories.end(), [&](const auto &p) {
-            paths.insert(m_root + sep + p);
-        });
-    } else {
-        paths.insert(m_root);
-    }
-
-    return paths;
-}
-
-
-std::shared_ptr<Config> ConfigFileParser::read_default_config_file(const std::string & file_path)
-{
-    auto parser = std::make_shared<ConfigFileParser>();
+    std::shared_ptr<ConfigFileParser> parser = std::make_shared<ConfigFileParser>();
     std::filesystem::path config_file_path;
 
-    if (file_path.empty())  {
+    if (file_path.empty())
+    {
         const std::string home_path{std::getenv("HOME")};
         config_file_path = std::filesystem::path(home_path) / ".config" / "r-backup" / "config.yml";
-    } else {
+    }
+    else
+    {
         config_file_path = file_path;
     }
 
-    if (std::filesystem::exists(config_file_path))
-    {
-        parser->parse_file(config_file_path);
-    }
+    parser->parse_file(config_file_path);
 
-    return parser->to_config();
+    return parser;
 }

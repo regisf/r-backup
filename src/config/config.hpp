@@ -54,12 +54,15 @@ enum class CommandLineType
 class IConfig
 {
 public:
-    virtual std::filesystem::path get_real_destination_directory() const = 0;
-    virtual std::filesystem::path get_destination_directory() const = 0;
-    virtual bool is_backup_exists() const = 0;
-    virtual std::filesystem::path get_destination_directory(const std::filesystem::path &path) const = 0;
-    virtual bool is_destination_dir_exists(const std::filesystem::path &source) const = 0;
-    virtual void set_backup_configuration(BackupCommandLineOptions configuration) = 0;
+    [[nodiscard]] virtual std::filesystem::path get_real_destination_directory() const = 0;
+
+    [[nodiscard]] virtual std::filesystem::path get_destination_directory() const = 0;
+
+    [[nodiscard]] virtual bool is_backup_exists() const = 0;
+
+    [[nodiscard]] virtual std::filesystem::path get_destination_directory(const std::filesystem::path &path) const = 0;
+
+    virtual void set_backup_configuration(BackupCommandLineOptions &&configuration) = 0;
 };
 
 
@@ -68,6 +71,8 @@ public:
  */
 struct Config : public IConfig
 {
+    Config() = default;
+
     enum class Strategy
     {
         NotSet,
@@ -90,7 +95,7 @@ struct Config : public IConfig
      *
      * @return std::filesystem::path
      */
-    std::filesystem::path get_destination_directory() const override;
+    [[nodiscard]] std::filesystem::path get_destination_directory() const override;
 
     /**
      * @brief Get the destination directory object
@@ -98,7 +103,7 @@ struct Config : public IConfig
      * @param path
      * @return std::filesystem::path
      */
-    std::filesystem::path get_destination_directory(const std::filesystem::path &path) const override;
+    [[nodiscard]] std::filesystem::path get_destination_directory(const std::filesystem::path &path) const override;
 
     /**
      * @brief Test if the destination directory exists
@@ -106,37 +111,27 @@ struct Config : public IConfig
      * @return true If exists
      * @return false if not exists
      */
-    bool is_backup_exists() const override;
-
-    /**
-     * @brief Test if the destination directory exists
-     *
-     * @param source The source path
-     * @return true If the directory exists
-     * @return false if the directory doesn't exist
-     */
-    bool is_destination_dir_exists(const std::filesystem::path &source) const override;
+    [[nodiscard]] bool is_backup_exists() const override;
 
     /**
      * @brief Get the real destination directory object
      *
      * @return std::filesystem::path
      */
-    std::filesystem::path get_real_destination_directory() const override;
+    [[nodiscard]] std::filesystem::path get_real_destination_directory() const override;
 
     /**
      * @brief extract_from_root_path
      * @param config The configuration object
      * @return
      */
-    void set_backup_configuration(BackupCommandLineOptions config) override;
+    void set_backup_configuration(BackupCommandLineOptions &&config) override;
 
     /**
      * @brief merge two Config object. The Config given override this.
      * @param src The object to merge with this one.
      */
-    void merge(const std::shared_ptr<Config> & src);
-
+    void merge(const std::shared_ptr<Config> &src);
 
     static std::shared_ptr<Config> instance(bool clear = false);
 
@@ -149,7 +144,7 @@ private:
      * @param path The source path
      * @return std::filesystem::path The path without the base path
      */
-    std::filesystem::path extract_from_root_path(const std::filesystem::path &path) const;
+    [[nodiscard]] std::filesystem::path extract_from_root_path(const std::filesystem::path &path) const;
 
 };
 

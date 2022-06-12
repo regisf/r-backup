@@ -30,7 +30,6 @@
 #include <filesystem>
 #include <algorithm>
 #include <iostream>
-#include <sstream>
 
 std::shared_ptr<Config> Config::instance(bool clear)
 {
@@ -82,47 +81,63 @@ std::filesystem::path Config::get_destination_directory(const std::filesystem::p
     return get_destination_directory() / parent / path.filename();
 }
 
-bool Config::is_destination_dir_exists(const std::filesystem::path &source) const
-{
-    const auto dest_parent = get_destination_directory(source).parent_path();
-
-    return std::filesystem::exists(dest_parent) && std::filesystem::is_directory(dest_parent);
-}
-
-void Config::set_backup_configuration(BackupCommandLineOptions backup_options)
+void Config::set_backup_configuration(BackupCommandLineOptions &&backup_options)
 {
     backup = std::move(backup_options);
     action = CommandLineType::Backup;
 }
 
 
-template <typename T>
-void merge_if_exists(bool cond, T & source, T & dest) {
-    if (cond) {
+template<typename T>
+void merge_if_exists(bool cond, T &source, T &dest)
+{
+    if (cond)
+    {
         dest = std::move(source);
     }
 }
 
-template <typename T>
-void merge_if_exists(T &source, T & dest) {
+template<typename T>
+void merge_if_exists(T &source, T &dest)
+{
     merge_if_exists(source != dest, source, dest);
 }
 
-void Config::merge(const std::shared_ptr<Config> & src)
+void Config::merge(const std::shared_ptr<Config> &src)
 {
-    action = src->action;
+    merge_if_exists(src->action != CommandLineType::Unknown,
+                    src->action,
+                    action);
 
     merge_if_exists(src->backup.dry_run, backup.dry_run);
-    merge_if_exists(src->backup.strategy, backup.strategy);
-    merge_if_exists(src->backup.nth, backup.nth);
+    merge_if_exists(!src->backup.strategy.empty(),
+                    src->backup.strategy,
+                    backup.strategy);
+    merge_if_exists(src->backup.nth > 0,
+                    src->backup.nth,
+                    backup.nth);
     merge_if_exists(src->backup.verbose, backup.verbose);
-    merge_if_exists(src->backup.config_file, backup.config_file);
-    merge_if_exists(src->backup.destination, backup.destination);
-    merge_if_exists(src->backup.backup_dir_name, backup.backup_dir_name);
-    merge_if_exists(src->exclusion_paths, exclusion_paths);
-    merge_if_exists(!src->exclusion_patterns.empty(), src->exclusion_patterns, exclusion_patterns);
-    merge_if_exists(src->include_directories, include_directories);
-    merge_if_exists(src->root_path, root_path);
+    merge_if_exists(!src->backup.config_file.empty(),
+                    src->backup.config_file,
+                    backup.config_file);
+    merge_if_exists(!src->backup.destination.empty(),
+                    src->backup.destination,
+                    backup.destination);
+    merge_if_exists(!src->backup.backup_dir_name.empty(),
+                    src->backup.backup_dir_name,
+                    backup.backup_dir_name);
+    merge_if_exists(!src->exclusion_paths.empty(),
+                    src->exclusion_paths,
+                    exclusion_paths);
+    merge_if_exists(!src->exclusion_patterns.empty(),
+                    src->exclusion_patterns,
+                    exclusion_patterns);
+    merge_if_exists(!src->include_directories.empty(),
+                    src->include_directories,
+                    include_directories);
+    merge_if_exists(!src->root_path.empty(),
+                    src->root_path,
+                    root_path);
 }
 
 std::string Config::to_string()
@@ -130,17 +145,31 @@ std::string Config::to_string()
 
     std::stringstream ss;
     ss
-       << "dry_run: " << backup.dry_run << "\n"
-       << "strategy: " << backup.strategy << "\n"
-       << "nth: " << backup.nth << "\n"
-       << "verbose: " << backup.verbose << "\n"
-       << "config_file: " << backup.config_file << "\n"
-       << "destination: " << backup.destination << "\n"
-       << "backup_dir_dname: " << backup.backup_dir_name << "\n"
-//       << "dry_run: " << join(exclusion_paths) << "\n"
-//       << "dry_run: " << join(exclusion_patterns) << "\n"
-//       << "dry_run: " << join(include_directories) << "\n"
-       << "root_path: " << root_path << "\n"
-    ;
+            << "dry_run: " << backup.dry_run << "\n"
+            << "strategy: " << backup.strategy << "\n"
+            << "nth: " << backup.nth << "\n"
+            << "verbose: " << backup.verbose << "\n"
+            << "config_file: " << backup.config_file << "\n"
+            << "destination: " << backup.destination << "\n"
+            << "backup_dir_dname: " << backup.backup_dir_name << "\n"
+            << "exclusion_paths: [ ";
+
+    for (const auto &ep: exclusion_paths)
+    {
+        ss << ep << ", ";
+    }
+
+    ss
+            << " ] \n"
+            << "exclusion_patterns: -- \n"
+            << "include_directories: [ ";
+
+    for (const auto &id: include_directories)
+    {
+        ss << id << ", ";
+    }
+    ss << " ]\n"
+       << "root_path: " << root_path << "\n";
+
     return ss.str();
 }
