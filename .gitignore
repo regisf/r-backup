@@ -1,6 +1,6 @@
 .vscode
 build
-build
 CMakeLists.txt.user
 .idea
 cmake-build-debug
+cmake-build-debug-coverage
