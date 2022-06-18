@@ -7,7 +7,9 @@ exclude:
     - ^exclude
     - shouldnt-be-copied\\.txt
   paths:
-    - truc
+    - truc/.ignore
 include:
   - one
+  - truc
+
 
