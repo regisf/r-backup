@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 #include <filesystem>
+#include "../utils/dependencies.hpp"
 
-using exit_callback = void(*)(int);
 
 struct BackupCommandLineOptions
 {
@@ -27,7 +27,7 @@ struct BackupCommandLineOptions
 class BackupCommandLine
 {
 public:
-    explicit BackupCommandLine(std::vector<std::string>  args);
+    explicit BackupCommandLine(std::vector<std::string> args);
 
     BackupCommandLineOptions parse(exit_callback exit_cb = &std::exit);
 
