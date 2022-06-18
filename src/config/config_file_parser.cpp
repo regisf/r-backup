@@ -47,11 +47,12 @@ std::shared_ptr<Config> ConfigFileParser::to_config()
     return config;
 }
 
-void ConfigFileParser::parse_file(const std::string &path)
+void ConfigFileParser::parse_file(const std::string &path, exit_callback exit_cb)
 {
     if (!std::filesystem::exists(path))
     {
-        return;
+        std::cerr << "File '" << path << "' wasn't found\n";
+        exit_cb(EXIT_FAILURE);
     }
 
     try

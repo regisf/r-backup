@@ -27,6 +27,7 @@
 #ifndef CONFIG_FILE_PARSER_HPP
 #define CONFIG_FILE_PARSER_HPP
 
+#include "../utils/dependencies.hpp"
 #include "config.hpp"
 
 #include <string>
@@ -63,9 +64,10 @@ public:
      * @brief Parse the configuration file. If there's a YAML syntax error, exit with status == 1
      *        else continue anyway.
      * 
-     * @param path 
+     * @param path
+     * @path exit_cb Here for testing reasons
      */
-    void parse_file(const std::string &path);
+    void parse_file(const std::string &path, exit_callback exit_cb = &std::exit);
 
 
 private:
