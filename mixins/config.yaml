@@ -5,7 +5,9 @@ name: r-backup
 exclude:
   patterns:
     - ^exclude
+    - shouldnt-be-copied\\.txt
   paths:
     - truc
 include:
   - one
+
