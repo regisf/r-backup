@@ -37,13 +37,8 @@
 
 #include <yaml-cpp/yaml.h>
 
-class IConfigFileParser
-{
-public:
-    virtual std::shared_ptr<Config> to_config() = 0;
-};
 
-class ConfigFileParser : public IConfigFileParser
+class ConfigFileParser
 {
 public:
     explicit ConfigFileParser() = default;
@@ -53,7 +48,7 @@ public:
      * 
      * @return std::shared_ptr<Config> The configuration object
      */
-    std::shared_ptr<Config> to_config() override;
+    std::shared_ptr<Config> to_config();
 
     /**
      * @brief Read the configuration file as given. If the file exists, the method parse it if not
