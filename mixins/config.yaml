@@ -1,6 +1,6 @@
 # Minimalistic config file for features testing
-root: mixins/source
-destination: mixins/dest
+root: $PWD/mixins/source
+destination: $PWD/mixins/dest
 name: r-backup
 exclude:
   patterns:

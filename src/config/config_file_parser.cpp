@@ -26,6 +26,7 @@
 
 #include "config.hpp"
 #include "config_file_parser.hpp"
+#include "path_interpreter.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -34,6 +35,7 @@
 #include <yaml-cpp/yaml.h>
 
 #define SystemSeparator std::string{"/"}
+
 
 std::shared_ptr<Config> ConfigFileParser::to_config()
 {
@@ -78,24 +80,26 @@ void ConfigFileParser::extract_destination_path()
 
     if (destination.IsDefined())
     {
-        std::filesystem::path dest_path{destination.as<std::string>()};
+        PathInterpreter interpreter{destination.as<std::string>()};
+        std::filesystem::path dest_path{interpreter.normalize_path()};
 
         if (name.IsDefined())
         {
             dest_path /= std::filesystem::path{name.as<std::string>()};
         }
 
-        m_destination = dest_path;
+        m_destination = std::filesystem::absolute(dest_path);
     }
 }
 
 void ConfigFileParser::extract_root_path()
 {
     const auto root = m_config_node["root"];
+    std::filesystem::path root_path;
 
     if (root.IsDefined())
     {
-        m_root = root.as<std::string>();
+        root_path = root.as<std::string>();
     }
     else
     {
@@ -107,8 +111,11 @@ void ConfigFileParser::extract_root_path()
             std::exit(1);
         }
 
-        m_root = std::string{home};
+        root_path = std::string{home};
     }
+
+    PathInterpreter interpreter{root_path};
+    m_root = interpreter.normalize_path();
 
     // Ensure path
     if (!m_root.ends_with(SystemSeparator))

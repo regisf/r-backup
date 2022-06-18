@@ -9,11 +9,12 @@
 TEST(TestConfigFileParser, test_to_config)
 {
     // Arrange (/ are automatically added at the end of a path
-    std::filesystem::path expected_root{"mixins/source/"};
-    std::filesystem::path expected_name{"mixins/dest/r-backup"};
+    std::filesystem::path expected_root = std::filesystem::current_path() / "mixins/source/";
+    std::filesystem::path expected_name = std::filesystem::current_path() / "mixins/dest/r-backup";
     std::vector<std::regex> expected_excluded_patterns{std::regex{"^exclude"}};
-    std::vector<std::string> expected_excluded_paths{std::string{"mixins/source/truc"}};
-    std::set<std::string> expected_included_paths{"mixins/source/one"};
+    std::vector<std::string> expected_excluded_paths{
+            std::string{std::filesystem::current_path() / "mixins/source/truc"}};
+    std::set<std::string> expected_included_paths{std::filesystem::current_path() / "mixins/source/one"};
 
     mock::exit_setup();
 
