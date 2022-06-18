@@ -1,18 +1,11 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cert-err58-cpp"
+
 #include "../../src/action/path_explorer.hpp"
+#include "../mock/sym_link.hpp"
 
 #include <gtest/gtest.h>
 
-namespace mock
-{
-    bool is_sym_link_always_true (const std::filesystem::path& _)
-    {
-        return true;
-    }
-
-    bool is_symlink_always_false(const std::filesystem::path & _) {
-        return false;
-    }
-}
 
 TEST(TestPathExplorer, test_pattern_should_be_skipped)
 {
@@ -115,3 +108,5 @@ TEST(TestPathExplorer, test_symlink_returns_false)
     // Assert
     ASSERT_FALSE(result);
 }
+
+#pragma clang diagnostic pop
