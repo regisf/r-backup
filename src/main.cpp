@@ -149,8 +149,7 @@ int main(int argc, char **argv)
 
         Config::instance()->merge(config_from_file);
         Config::instance()->merge(config);
-        auto c = Config::instance();
-        
+
         ret_val = process_action();
     }
     catch (const CommandLineError &err)
