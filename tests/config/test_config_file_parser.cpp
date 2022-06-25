@@ -1,5 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cert-err58-cpp"
 
 #include "../../src/config/config_file_parser.hpp"
 #include "../mock/exit.hpp"
@@ -13,8 +11,9 @@ TEST(TestConfigFileParser, test_to_config)
     std::filesystem::path expected_name = std::filesystem::current_path() / "mixins/dest/r-backup";
     std::vector<std::regex> expected_excluded_patterns{std::regex{"^exclude"}};
     std::vector<std::string> expected_excluded_paths{
-            std::string{std::filesystem::current_path() / "mixins/source/truc"}};
-    std::set<std::string> expected_included_paths{std::filesystem::current_path() / "mixins/source/one"};
+            std::string{std::filesystem::current_path() / "mixins/source/truc/.ignore"}};
+    std::set<std::string> expected_included_paths{std::filesystem::current_path() / "mixins/source/one",
+                                                  std::filesystem::current_path() / "mixins/source/truc"};
 
     mock::exit_setup();
 
@@ -39,5 +38,3 @@ TEST(TestConfigFileParser, test_to_config)
     // Restore
     mock::exit_tear_down();
 }
-
-#pragma clang diagnostic pop
