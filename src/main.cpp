@@ -38,6 +38,7 @@
 #include "action/path_explorer.hpp"
 #include "command_line/command_line.hpp"
 #include "config/config_file_parser.hpp"
+#include "exceptions/backup_error.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -91,7 +92,7 @@ static StatusCode do_backup()
         action::Backup::start();
     }
 
-    catch (const action::BackupError &error)
+    catch (const BackupError &error)
     {
         std::cerr << "Error: Unable to backup because: " << error.what()
                   << std::endl;
