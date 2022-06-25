@@ -33,7 +33,7 @@
 
 namespace action
 {
-    void Backup::start()
+    void Backup::start(std::function<void(int)> exit_cb)
     {
         if (action::Backup bk_act; bk_act.can_backup())
         {

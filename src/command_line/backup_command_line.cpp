@@ -35,7 +35,7 @@ BackupCommandLine::BackupCommandLine(std::vector<std::string> args)
         : args(std::move(args))
 {}
 
-BackupCommandLineOptions BackupCommandLine::parse(exit_callback exit_cb)
+BackupCommandLineOptions BackupCommandLine::parse(const std::function<void(int)> &exit_cb)
 {
     bool unknown_option{false};
     

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <filesystem>
+#include <functional>
 #include "../utils/dependencies.hpp"
 
 
@@ -29,7 +30,7 @@ class BackupCommandLine
 public:
     explicit BackupCommandLine(std::vector<std::string> args);
 
-    BackupCommandLineOptions parse(exit_callback exit_cb = &std::exit);
+    BackupCommandLineOptions parse(const std::function<void(int)> &exit_cb = &std::exit);
 
 private:
     std::vector<std::string> args;

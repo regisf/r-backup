@@ -64,7 +64,7 @@ namespace action
         /**
          * Create backup object and start to backup
          */
-        static void start();
+        static void start(std::function<void(int)> exit_cb = &std::exit);
 
     private:
         std::string m_error_msg;
