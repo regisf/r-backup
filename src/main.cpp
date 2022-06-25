@@ -35,17 +35,12 @@
  */
 #include "action/backup.hpp"
 #include "action/initializer.hpp"
-#include "action/path_explorer.hpp"
 #include "command_line/command_line.hpp"
 #include "config/config_file_parser.hpp"
 #include "exceptions/backup_error.hpp"
 
 #include <cstdlib>
 #include <iostream>
-#include <memory>
-
-// #include <lyra/lyra.hpp>
-// #include <spdlog/spdlog.h>
 
 #define RBackupVersion "0.1.0"
 

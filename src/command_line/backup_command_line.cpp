@@ -5,7 +5,7 @@
 #include <sstream>
 #include <utility>
 
-static const char* USAGE = R"(
+static const char *USAGE = R"(
 r-backup backup [OPTIONS]
 
 The options given override the default configuration file.
@@ -38,7 +38,7 @@ BackupCommandLine::BackupCommandLine(std::vector<std::string> args)
 BackupCommandLineOptions BackupCommandLine::parse(const std::function<void(int)> &exit_cb)
 {
     bool unknown_option{false};
-    
+
     for (int i = 1, l = args.size(); i < l; ++i)
     {
         const std::string argument{args.at(i)};
