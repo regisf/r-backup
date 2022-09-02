@@ -18,7 +18,7 @@ TEST(TestConfigFileParser, test_to_config)
     mock::exit_setup();
 
     ConfigFileParser parser;
-    parser.parse_file("../../mixins/config.yaml", mock::exit);
+    parser.parse_file("../mixins/config.yaml", mock::exit);
 
     // Act
     auto config = parser.to_config();

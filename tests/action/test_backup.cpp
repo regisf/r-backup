@@ -1,12 +1,18 @@
 #include "../../src/action/backup.hpp"
+#include "../mock/exit.hpp"
 
 #include <gtest/gtest.h>
 
 
-TEST(TestBackup, test_backup_start)
+TEST(TestBackup, test_backup_start_and_cant_backup)
 {
-    auto config = nullptr;
-    auto fileCopy = utils::FileCopy();
+    // Arrange
+    mock::exit_setup();
 
-    // action::Backup::start(config, fileCopy);
+    // Act
+    action::Backup::start(mock::exit);
+
+    // Assert
+    ASSERT_TRUE(mock::is_exit_called());
+    mock::exit_tear_down();
 }

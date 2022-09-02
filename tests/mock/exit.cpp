@@ -13,7 +13,7 @@ namespace mock
     {
         exit_called = false;
     }
-    
+
     void exit_tear_down()
     {
         exit_called = false;

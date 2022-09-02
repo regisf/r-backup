@@ -34,37 +34,31 @@
 #include <filesystem>
 #include <memory>
 
-struct Config;
-
 
 namespace action
 {
-    class BackupError: public std::exception
+    class IBackup
     {
     public:
-        BackupError(const std::string & msg) : message(msg) {}
-
-        const char * what() const noexcept override
-        {
-            return message.c_str();
-        }
-
-    private:
-        std::string message;
+        virtual bool can_backup() = 0;
     };
 
-    class Backup
+    class Backup : public IBackup
     {
     public:
-        explicit Backup()=default;
-        void backup(const std::set<std::filesystem::path> &paths);
-        [[nodiscard]] bool can_backup();
+        explicit Backup() = default;
+
+        void backup(const std::set<std::filesystem::path> &paths) const;
+
+        [[nodiscard]] bool can_backup() override;
+
         [[nodiscard]] std::string error_message() const;
 
         /**
          * Create backup object and start to backup
+         * @param exit_cb The callback of exiting, here for testability reasons
          */
-        static void start(std::function<void(int)> exit_cb = &std::exit);
+        static void start(const std::function<void(int)> &exit_cb = &std::exit);
 
     private:
         std::string m_error_msg;

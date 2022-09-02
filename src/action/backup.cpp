@@ -33,7 +33,7 @@
 
 namespace action
 {
-    void Backup::start(std::function<void(int)> exit_cb)
+    void Backup::start(const std::function<void(int)> &exit_cb)
     {
         if (action::Backup bk_act; bk_act.can_backup())
         {
@@ -54,12 +54,17 @@ namespace action
 
             bk_act.backup(pathes);
         }
+        else
+        {
+            std::cerr << bk_act.error_message() << "\n";
+            exit_cb(EXIT_FAILURE);
+        }
     }
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
 
-    void Backup::backup(const std::set<std::filesystem::path> &paths)
+    void Backup::backup(const std::set<std::filesystem::path> &paths) const
     {
         if (!paths.empty())
         {
