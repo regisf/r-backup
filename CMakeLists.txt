@@ -9,6 +9,7 @@ include(FindPkgConfig)
 find_package(PkgConfig)
 
 pkg_check_modules(YAMLCPP REQUIRED yaml-cpp)
+pkg_check_modules(GTEST REQUIRED gtest)
 
 #include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 #conan_basic_setup()
