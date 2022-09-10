@@ -6,16 +6,15 @@
 
 #include <gtest/gtest.h>
 
-
 TEST(TestPathExplorer, test_pattern_should_be_skipped)
 {
     // Arrange
     std::shared_ptr<Config> config = Config::instance();
-    std::regex regex{"\\.git"};
-    config->exclusion_patterns.push_back(regex);
+    config->exclusion_patterns.emplace_back("shouldnt-be-copied\\.txt");
+    config->exclusion_patterns.emplace_back("\\.git");
 
     PathExplorer pathExplorer;
-    std::filesystem::path path{".git"};
+    std::filesystem::path path{"/home/toto/programmation/R-Backup/mixins/source/truc/shouldnt-be-copied.txt"};
 
     // Act
     auto result = pathExplorer.should_be_skipped(path);
@@ -28,7 +27,7 @@ TEST(TestPathExplorer, test_pattern_should_not_be_skipped)
 {
     // Arrange
     std::shared_ptr<Config> config = Config::instance();
-    std::regex regex{"\\.git"};
+    std::regex regex{"this is a file\\.git"};
     config->exclusion_patterns.push_back(regex);
 
     PathExplorer pathExplorer;

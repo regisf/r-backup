@@ -158,7 +158,7 @@ void ConfigFileParser::extract_excluded_patterns(const YAML::Node &excluded)
 
             try
             {
-                m_exclude_patterns.emplace_back(p);
+                m_exclude_patterns.emplace_back(std::regex{p});
             }
             catch (std::regex_error &err)
             {

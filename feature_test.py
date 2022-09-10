@@ -8,6 +8,7 @@ from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--debug", action="store_true", default=False)
+parser.add_argument("--rebuild", action="store_true", default=False)
 options = parser.parse_args()
 
 current_dir = Path(".").resolve()
@@ -21,7 +22,7 @@ try:
     os.chdir(build_dir)
 
     # Build
-    if not (build_dir / "src" / "r-backup").exists():
+    if not (build_dir / "src" / "r-backup").exists() or options.rebuild:
         assert not os.system(f"cmake {current_dir}")
         assert not os.system("cmake --build . -j")
         assert not os.system(build_dir / "tests" / "r-backup_test")
@@ -35,7 +36,8 @@ try:
 
     # Assert result
     backup_dir = destination_dir / datetime.datetime.now().strftime("%Y-%m-%d")
-
+    shutil.rmtree(backup_dir, ignore_errors=True)
+    
     expected_tree = [
         (False, backup_dir / "truc"),
         (False, backup_dir / "truc" / "shouldnt-be-copied.txt"),

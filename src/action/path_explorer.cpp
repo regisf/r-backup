@@ -60,8 +60,8 @@ bool PathExplorer::is_pattern_match(const std::filesystem::path &p) const
     const auto pstr = p.string();
     return std::ranges::any_of(Config::instance()->exclusion_patterns.begin(),
                                Config::instance()->exclusion_patterns.end(),
-                               [&pstr](const auto &p) {
-                                   return std::regex_search(pstr, std::regex{p});
+                               [&pstr](const std::regex &pattern) {
+                                   return std::regex_search(pstr, pattern);
                                });
 }
 
@@ -80,6 +80,7 @@ bool PathExplorer::is_in_exclusion_path(const std::filesystem::path &p) const
 bool PathExplorer::should_be_skipped(const std::filesystem::path &p,
                                      IsSymlinkFunc is_symlink) const
 {
+    bool match = is_pattern_match(p);
     return is_symlink(p) || is_pattern_match(p) || is_in_exclusion_path(p);
 }
 
@@ -113,24 +114,4 @@ void PathExplorer::explore_directory(const std::filesystem::path &dir_path)
 
         m_pathes.insert(p);
     }
-}
-
-std::filesystem::path PathExplorer::guess_last_backup() const
-{
-    std::vector<std::filesystem::path> directories;
-
-    auto root_backup = Config::instance()->get_real_destination_directory();
-
-    for (const std::filesystem::path &path: std::filesystem::directory_iterator{root_backup})
-    {
-        directories.push_back(path);
-    }
-
-    std::sort(directories.begin(),
-              directories.end(),
-              [](auto &s1, auto &s2) {
-                  return s1 > s2;
-              });
-
-    return directories.at(0);
 }

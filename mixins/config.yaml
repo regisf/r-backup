@@ -4,8 +4,8 @@ destination: $PWD/mixins/dest
 name: r-backup
 exclude:
   patterns:
-    - ^exclude
-    - shouldnt-be-copied\\.txt
+    - exclude
+    - shouldnt-be-copied.txt
   paths:
     - truc/.ignore
 include:

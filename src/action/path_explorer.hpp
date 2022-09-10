@@ -33,24 +33,26 @@
 #include <string>
 #include <filesystem>
 
-using IsSymlinkFunc= bool (*)(const std::filesystem::path&);
+using IsSymlinkFunc = bool (*)(const std::filesystem::path &);
 
 class PathExplorer
 {
 public:
     explicit PathExplorer() = default;
 
-    bool should_be_skipped(const std::filesystem::path &p, IsSymlinkFunc is_symlink = std::filesystem::is_symlink) const;
+    bool
+    should_be_skipped(const std::filesystem::path &p, IsSymlinkFunc is_symlink = std::filesystem::is_symlink) const;
 
     std::set<std::filesystem::path> explore();
+
     void explore_directory(const std::filesystem::path &dir_path);
-    std::filesystem::path guess_last_backup() const;
 
 private:
     std::set<std::filesystem::path> m_pathes;
 
-    bool is_pattern_match(const std::filesystem::path & path) const;
-    bool is_in_exclusion_path(const std::filesystem::path & path) const;
+    [[nodiscard]] bool is_pattern_match(const std::filesystem::path &path) const;
+
+    [[nodiscard]] bool is_in_exclusion_path(const std::filesystem::path &path) const;
 };
 
 #endif
