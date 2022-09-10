@@ -139,9 +139,13 @@ int main(int argc, char **argv)
     {
         CommandLine cmdLine(argc, argv);
         auto config = cmdLine.parse();
+        std::shared_ptr<Config> config_from_file = std::make_shared<Config>();
 
-        auto config_from_file = ConfigFileParser::read_default_config_file(
-                config->backup.config_file)->to_config();
+        if (config->action != CommandLineType::Help)
+        {
+            config_from_file = ConfigFileParser::read_default_config_file(
+                    config->backup.config_file)->to_config();
+        }
 
         Config::instance()->merge(config_from_file);
         Config::instance()->merge(config);
