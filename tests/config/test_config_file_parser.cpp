@@ -18,7 +18,9 @@ TEST(TestConfigFileParser, test_to_config)
     mock::exit_setup();
 
     ConfigFileParser parser;
-    parser.parse_file("../../mixins/config.yaml", mock::exit);
+    char *root_path = std::getenv("CONFIG_ROOT_PATH");
+    std::string base_path = root_path != nullptr ? std::string{root_path} : std::string{"../.."};
+    parser.parse_file(base_path + "/mixins/config.yaml", mock::exit);
 
     // Act
     auto config = parser.to_config();
