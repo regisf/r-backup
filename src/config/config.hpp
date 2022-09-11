@@ -81,7 +81,6 @@ struct Config : public IConfig
         RemovePrevious,
         Difference
     };
-
     CommandLineType action{CommandLineType::Unknown};
     BackupCommandLineOptions backup;
 

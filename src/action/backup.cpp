@@ -98,6 +98,7 @@ namespace action
 
         bool status = true;
 
+        auto d = Config::instance()->backup.destination;
         if (!std::filesystem::exists(Config::instance()->backup.destination))
         {
             std::stringstream ss;

@@ -37,7 +37,7 @@ try:
     # Assert result
     backup_dir = destination_dir / datetime.datetime.now().strftime("%Y-%m-%d")
     shutil.rmtree(backup_dir, ignore_errors=True)
-    
+
     expected_tree = [
         (False, backup_dir / "truc"),
         (False, backup_dir / "truc" / "shouldnt-be-copied.txt"),
@@ -51,6 +51,8 @@ try:
         (True, backup_dir / "one" / "copy-this-file.txt"),
         (True, backup_dir / "one" / "two" / "this-file-should-exists.md"),
         (True, backup_dir / "one" / "two" / "three" / "go.txt"),
+        (True, backup_dir / "one" / "two" / "three" / "cpp.txt"),
+        (True, backup_dir / "one" / "two" / "three" / "python.txt"),
         (True, backup_dir / "copy-this-file.txt"),
         (True, backup_dir / "file-sample-1.yml"),
     ]
@@ -60,7 +62,7 @@ try:
         if options.debug:
             print(f"{status}: {expected} {neg} exists")
         else:
-            assert exists == expected.exists()
+            assert exists == expected.exists(), f"File = {expected}"
 
 finally:
     # Restore

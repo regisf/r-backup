@@ -112,6 +112,11 @@ void PathExplorer::explore_directory(const std::filesystem::path &dir_path)
             continue;
         }
 
+        if (Config::instance()->backup.verbose)
+        {
+            std::cout << "Inserting " << p << "\n";
+        }
+
         m_pathes.insert(p);
     }
 }

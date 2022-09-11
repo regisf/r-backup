@@ -12,7 +12,7 @@ static std::string replace_home(const std::string &path)
 {
     std::string p{path};
 
-    if (auto pos = p.find_first_of("$HOME");
+    if (auto pos = p.find("$HOME");
             pos != std::string::npos && pos > 0)
     {
         throw PathInterpreterException("$HOME variable must be at the beginning of the path");
@@ -30,8 +30,8 @@ static std::string replace_home(const std::string &path)
 static std::string replace_pwd(const std::string &path)
 {
     std::string p{path};
-
-    if (auto pos_pwd = p.find_first_of("$PWD"); pos_pwd >= 0 && pos_pwd != std::string::npos)
+    auto pos_pwd = p.find("$PWD");
+    if (pos_pwd != std::string::npos)
     {
         auto pwd = std::filesystem::current_path();
         p.replace(pos_pwd, 4, pwd);

@@ -10,7 +10,7 @@ namespace utils
     class DestinationDirectory
     {
     public:
-        static Status create_if_not_exists(const std::filesystem::path &path);
+        static void create_if_not_exists(const std::filesystem::path &path);
     };
 }
 #endif // DESTINATIONDIRECTORY_HPP
