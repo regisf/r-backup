@@ -88,7 +88,7 @@ void ConfigFileParser::extract_destination_path()
             dest_path /= std::filesystem::path{name.as<std::string>()};
         }
 
-        m_destination = std::filesystem::absolute(dest_path);
+        m_destination = std::filesystem::path(dest_path);
     }
 }
 
