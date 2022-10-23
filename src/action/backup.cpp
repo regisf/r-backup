@@ -83,7 +83,7 @@ namespace action
                 std::cout << "Copying " << path.string() << " to " << (destination / path.filename()).string() << "\n";
             }
 
-            utils::FileCopy::copy_file(path, destination);
+            utils::FileCopy::copy_file(path);
         }
     }
 

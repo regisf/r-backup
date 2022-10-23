@@ -13,7 +13,7 @@ namespace utils
     class FileCopy
     {
     public:
-        static void copy_file(const std::filesystem::path &source, const std::filesystem::path &dest);
+        static void copy_file(const std::filesystem::path &source);
     };
 }
 #endif
