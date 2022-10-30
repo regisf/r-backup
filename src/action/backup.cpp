@@ -37,22 +37,22 @@ namespace action
     {
         if (action::Backup bk_act; bk_act.can_backup())
         {
-            std::set<std::filesystem::path> pathes;
+            std::set<std::filesystem::path> paths;
 
             if (!Config::instance()->is_backup_exists())
             {
                 auto c = Config::instance();
                 std::cout << "Exploring directory " << Config::instance()->root_path << "\n";
                 PathExplorer explorer;
-                pathes = explorer.explore();
-                std::cout << "Got " << pathes.size() << " files found\n";
+                paths = explorer.explore();
+                std::cout << "Got " << paths.size() << " files found\n";
             }
             else
             {
-                std::cout << "There's nothing to backup because it is already backuped.\n";
+                std::cout << "There's nothing to backup because it is already backup.\n";
             }
 
-            bk_act.backup(pathes);
+            bk_act.backup(paths);
         }
         else
         {
